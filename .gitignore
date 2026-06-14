@@ -25,6 +25,12 @@ build/
 .next/
 out/
 
+# Rust / Anchor build artifacts (can be 1GB+, never commit)
+target/
+packages/contract/scope4/target/
+*.so
+*.d
+
 # Always keep the safe template in git
 !.env.example
 
@@ -42,3 +48,5 @@ yarn-error.log*
 .Trashes
 ehthumbs.db
 Thumbs.db
+test-ledger/
+
