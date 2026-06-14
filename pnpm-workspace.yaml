@@ -1,3 +1,15 @@
+# ==============================================================================
+# PRE-START TASK: Monorepo Workspace Definition
+# WHO DID THIS: Member A (Blockchain/DB Lead)
+# WHAT WE DID: Told pnpm where each package lives in the project.
+# WHY WE DID IT: This allows all packages to share code (e.g., @scope4/types)
+# without publishing to npm. Just run `pnpm install` from the root folder.
+#
+# apps/web   → Member B's Next.js frontend (created in Phase 1)
+# apps/api   → Member A's Express backend  (created in Phase 1)
+# packages/types  → Shared TypeScript types (DONE - Day 0)
+# packages/agent  → Member C's AI modules  (created in Phase 1)
+# ==============================================================================
 packages:
   - 'apps/*'
   - 'packages/*'

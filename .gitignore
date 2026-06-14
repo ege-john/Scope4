@@ -1,4 +1,20 @@
-# Dependencies
+# ============================================================
+# CRITICAL: Private keys and secrets — NEVER commit these!
+# ============================================================
+# Solana private keypair files (generated on Day 0 by Member A)
+*-wallet.json
+*.DANGER_PRIVATE_DELETE_OR_MOVE
+
+# Real environment variables (contains passwords and API keys)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ============================================================
+# Dependencies and build outputs
+# ============================================================
 node_modules/
 /.pnp
 .pnp.js
@@ -9,12 +25,7 @@ build/
 .next/
 out/
 
-# Environment variables (CRITICAL)
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+# Always keep the safe template in git
 !.env.example
 
 # Logs
