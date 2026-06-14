@@ -1,0 +1,16 @@
+{
+  "TR": {
+    "steel": 1.89,
+    "cement": 0.76,
+    "aluminium": 4.5,
+    "fertilisers": 2.1,
+    "electricity": 0.45
+  },
+  "CN": {
+    "steel": 2.1,
+    "cement": 0.85,
+    "aluminium": 14.2,
+    "fertilisers": 2.4,
+    "electricity": 0.61
+  }
+}
