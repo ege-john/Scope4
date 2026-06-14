@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "@scope4/types": ["../types/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"]
+}
