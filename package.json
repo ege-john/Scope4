@@ -1,0 +1,16 @@
+{
+  "name": "scope4",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev:web": "pnpm --filter @scope4/web dev",
+    "dev:api": "pnpm --filter @scope4/api dev",
+    "dev:agent": "pnpm --filter @scope4/agent dev",
+    "build": "pnpm --filter @scope4/web build",
+    "test": "pnpm --filter @scope4/agent test"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0"
+  }
+}

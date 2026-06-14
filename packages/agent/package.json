@@ -1,0 +1,9 @@
+{
+  "name": "@scope4/agent",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@scope4/types": "workspace:*"
+  }
+}
