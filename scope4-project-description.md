@@ -2,308 +2,243 @@
 
 ## Project Overview
 
-Scope4 is a B2B compliance platform that combines blockchain and AI agents to automate CBAM compliance workflows and produce auditable ESG-ready carbon reporting for importers of carbon-intensive goods. The project is designed around a simple but high-impact thesis: cross-border carbon compliance is becoming a mandatory business process, yet the data collection, validation, and reporting flow is still fragmented, manual, and vulnerable to manipulation or error.
+Scope4 is a B2B compliance platform that combines blockchain and AI agents to automate CBAM (Carbon Border Adjustment Mechanism) compliance workflows and produce auditable ESG-ready carbon reporting for importers of carbon-intensive goods. The project is designed around a simple but high-impact thesis: cross-border carbon compliance is becoming a mandatory business process, yet the data collection, validation, and reporting flow is still fragmented, manual, and vulnerable to manipulation or error.
 
-The initial product focus is on EU importers dealing with CBAM-covered goods from Turkey and China. Instead of trying to cover every geography and every trade pattern, the project narrows the scope to the most demoable and most defensible version of the problem: an importer submits a shipment record, a logistics actor confirms the shipment on-chain, and an AI agent then calculates the emissions-related compliance output and generates a report.
+The initial product focus is on EU importers dealing with CBAM-covered goods from Turkey and China. Rather than trying to cover every geography and every trade pattern, the project narrows the scope to the most demoable and legally defensible version of the problem: a **4-Actor Hybrid Attestation Model** where the exporter, importer, and logistics partner independently attest to transaction facts on-chain before an AI agent orchestration pipeline processes the combined data.
 
-This framing makes the project both practical and differentiated. It is practical because it focuses on the core compliance bottleneck rather than trying to reinvent global trade finance. It is differentiated because it uses Solana not merely as a database substitute, but as a multi-party trust layer where more than one actor participates in the evidence trail before the AI workflow begins.
+This framing makes the project both practical and differentiated. It is practical because it focuses on the core compliance bottleneck rather than trying to reinvent global trade finance. It is differentiated because it uses Solana not merely as a database substitute, but as a multi-party trust layer where three distinct human parties (Seller, Importer, Logistics) sign their own version of the truth before the AI validation and compliance workflow begins.
+
+Furthermore, Scope4 incorporates a legally rigorous **CBAM/BI Layer Separation**. EU Regulation 2023/956 dictates that CBAM certificates apply only to production-embedded emissions. Scope4 separates regulatory liabilities (embedded emissions only) from business intelligence carbon tracking (which includes transport/logistics emissions). This ensures compliance reports are fully defensible to auditors while providing a comprehensive carbon footprint narrative to corporate decision-makers.
+
+---
 
 ## The Problem
 
-The European Union's Carbon Border Adjustment Mechanism (CBAM) requires importers of specified carbon-intensive goods to report embedded emissions and comply with a more formal declaration and certificate regime from 2026 onward. This creates a new operational burden for importers, especially those buying from non-EU countries where emissions accounting methods, carbon pricing systems, and documentation quality may differ significantly.
+The European Union's Carbon Border Adjustment Mechanism (CBAM) requires importers of specified carbon-intensive goods (steel, cement, aluminium, fertilisers, electricity) to report embedded emissions and purchase corresponding CBAM certificates from 2026 onward. This creates a new operational burden for importers, especially those buying from non-EU countries where emissions accounting methods, carbon pricing systems, and documentation quality differ significantly.
 
 Today, many businesses still rely on spreadsheets, email chains, supplier questionnaires, and fragmented trade documentation to assemble CBAM evidence. This creates five clear problems:
 
-- Manual reporting is slow and costly.
-- Supplier data is inconsistent and often incomplete.
-- Embedded-emissions calculations are difficult to standardize across shipments.
-- Auditability is weak because supporting evidence is scattered across emails, PDFs, and internal systems.
-- Greenwashing and data manipulation become easier when the reporting trail is centralized and editable.
+- **Manual reporting overhead:** Gathering data from foreign suppliers, matching it with customs receipts, and manually computing footprint statistics is slow and costly.
+- **Supplier verification gap:** Importers cannot credibly self-report emissions they did not produce. In a real-world scenario, the exporter (seller) must declare the production emissions, facility parameters, and methodology.
+- **Complexity of calculations:** Embedded-emissions calculations are difficult to standardize, leading to compliance errors.
+- **Weak audit trails:** Supporting evidence is scattered across email attachments, PDFs, and internal databases, making independent auditing slow and error-prone.
+- **Data vulnerability:** Greenwashing and data manipulation are easy when the reporting trail is stored in a centralized, editable database.
 
 For a regulator, auditor, or enterprise compliance team, the hardest part is not only calculating a carbon number. The harder problem is proving that a shipment record, supporting documents, and emissions assumptions were captured in a trustworthy sequence and were not silently altered later.
+
+---
 
 ## The Solution
 
 Scope4 addresses this problem by combining three elements into one workflow:
 
-1. A web platform where importers submit trade data and compliance evidence.
-2. A Solana-based smart-contract layer that records the trade attestation and logistics approval as immutable workflow events.
-3. An AI agent system that reacts to approved on-chain events, computes CBAM-relevant outputs, and generates a structured compliance report.
+1. **A web platform** where Sellers, Importers, and Logistics partners log in, switch between simulated roles, submit trade data, and upload compliance evidence.
+2. **A Solana-based smart-contract layer** that records the attestations and workflow states as immutable, on-chain records (Program Derived Addresses, or PDAs) containing hashes of the off-chain payloads.
+3. **An AI agent system (Node.js TypeScript service)** that reacts to approved on-chain events, verifies data consistency, computes regulatory CBAM obligations and BI carbon footprint metrics, and generates a structured, human-readable compliance report using Gemini.
 
-The product does not attempt to move the underlying commercial payment for imports onto blockchain. That choice is deliberate. For the hackathon, the highest-value role of blockchain is not payment settlement but trust, auditability, shared verification, and workflow coordination between multiple parties.
+The product does not attempt to move the underlying commercial payment for imports onto the blockchain. That choice is deliberate. For the hackathon, the highest-value role of blockchain is not payment settlement, but trust, auditability, shared verification, and workflow coordination between multiple parties.
 
-The result is a compliance product where blockchain secures the evidence trail and AI automates the reasoning and reporting layer.
+The result is a compliance product where blockchain secures the evidence trail and AI automates the reasoning, validation, and reporting layer.
+
+---
+
+## 4-Actor Hybrid Attestation Model
+
+To model a realistic supply chain trust environment, Scope4 coordinates four actors who each contribute a distinct category of truth:
+
+| Actor | Role | Key Contributions |
+|---|---|---|
+| **Seller / Exporter** | Turkish steel mill or Chinese manufacturer | Production emissions intensity, facility reference, emissions methodology (direct measurement, default values, or national grid), hash of supporting document bundle. |
+| **Importer / Buyer** | European corporate importer | Commercial details: quantity (kg), destination country, invoice reference, purchase date, hash of trade invoice. |
+| **Logistics Partner** | Freight forwarder / carrier | Operational facts: shipment reference, confirmed cargo weight, origin confirmation, route confirmation, dispatch date. |
+| **AI Agents** | Verification, calculation, and reporting engine | Autonomous cross-checking of the three actor inputs for discrepancies, CBAM tax calculation, LLM-generated compliance report, and portfolio carbon insights. |
+
+---
 
 ## Core Workflow
 
 The end-to-end flow of Scope4 is designed to be easy to understand in a live demo and strong enough to support the project's prize applications.
 
-### Step 1: Importer submits a shipment
+```
+  [SELLER / Exporter]           [IMPORTER / Buyer]        [LOGISTICS]
+  Turkish steel mill            Italian company           Freight forwarder
+        │                             │                        │
+        │ 1. Submits                  │ 2. Submits             │ 3. Attests
+        │ - production intensity      │ - quantity             │ - shipment ref
+        │ - facility reference        │ - invoice ref          │ - qty check
+        │ - methodology used          │ - product type         │ - route check
+        │ - supporting doc hash       │ - destination          │ - dispatch date
+        │                             │                        │
+        ▼                             ▼                        ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                        SUPABASE (off-chain)                           │
+│  seller_attestations  │  trade_records  │  logistics_attestations     │
+│  + documents stored in Supabase Storage                               │
+└──────────────────────────┬───────────────────────────────────────────┘
+                           │ hashes + pubkeys
+                           ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                   SOLANA DEVNET (on-chain)                            │
+│                                                                       │
+│  SellerAttestation PDA  │  TradeRecord PDA  │  LogisticsAttest PDA   │
+│                         │                   │                         │
+│           ComplianceBundle PDA — links all three                      │
+│           state: AwaitingParties → ReadyForProcessing                 │
+│                         │                                             │
+│           Emits: ComplianceBundleReady event  ─────────────────────► │
+└──────────────────────────────────────────────────────────────────────┘
+                                                                        │
+                                                                        ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                      AI AGENT SERVICE (Node.js)                       │
+│                                                                       │
+│  1. ValidationAgent    → cross-checks 3 actor inputs for consistency  │
+│  2. EmissionsAgent     → deterministic CBAM calculation               │
+│  3. ReportAgent        → LLM (Gemini) generates compliance report     │
+│  4. AnalyticsAgent     → dashboard BI, insights, portfolio summary    │
+└──────────────────────────────────────────────────────────────────────┘
+                                                                        │
+                                                                        ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                NEXT.JS FRONTEND (Vercel)                              │
+│                                                                       │
+│  /seller        /importer        /logistics        /dashboard         │
+│  Seller portal  Importer portal  Approval portal   Analytics + BI     │
+│                                                                       │
+│  /bundles/[id]   Full compliance bundle audit trail + report          │
+└──────────────────────────────────────────────────────────────────────┘
+```
 
-An importing company uses the web interface to submit a pending trade record. The form includes:
+### Step 1: The Three Parties Attest
+The three human-simulated actors submit their data:
+- **The Seller** submits production intensity, facility data, methodology, and uploads supporting PDFs. The browser automatically computes a SHA-256 hash of the documents. A transaction is sent to Solana to record these parameters on-chain under a `SellerAttestation` account.
+- **The Importer** submits commercial parameters, invoice numbers, and invoice files. A transaction is sent to Solana to record these parameters under a `TradeRecord` account.
+- **The Logistics Partner** reviews the pending shipment, confirming quantity (kg), origin, and route. They submit their operational confirmation on-chain to the `LogisticsAttestation` account.
+*(Submissions can happen in any order. The system handles asynchronous state aggregation).*
 
-- Importer identity
-- Supplier identity
-- Product category
-- Quantity
-- Origin country
-- Destination country
-- Shipment or invoice reference
-- Timestamp or shipment date
-- Optional attached supporting documents
+### Step 2: Smart Contract Updates State and Emits Trigger
+The Solana program checks if all three attestations (Seller, Importer, Logistics) are complete for the given `trade_id`.
+- If all three flags are true, the `ComplianceBundle` PDA updates its status from `AwaitingParties` to `ReadyForProcessing`.
+- The contract emits a `ComplianceBundleReady` event. 
 
-For the hackathon MVP, origin countries are limited to Turkey and China. This keeps the project narrow enough to be reliable while still representing major CBAM-relevant external trade relationships.
+### Step 3: AI Agent Detects Event and Begins Validation
+The AI agent service (monitoring the database via 5-second polling) detects the `ReadyForProcessing` status. 
+1. **ValidationAgent (Deterministic):** Cross-checks the parameters submitted by the three actors. It checks that `seller.product_type === trade.product_type`, that the countries align, and that the logistics-confirmed weight is within a ±5% tolerance of the importer-declared invoice weight. If a discrepancy is found, it raises validation flags.
 
-### Step 2: Smart contract records a pending trade event
+### Step 4: AI Agent Computes Emissions (CBAM/BI Split)
+The **EmissionsCalculationAgent** processes the verified data using a two-layer calculation structure:
+- **Layer 1 (CBAM Reporting Layer):** Calculates regulatory embedded production emissions:
+  $$\text{Embedded } \text{tCO}_2 = \frac{\text{Quantity (kg)}}{1000} \times \text{Production Intensity}$$
+  It multiplies this by a configurable certificate price placeholder (e.g., €50/tCO₂) to output the estimated CBAM certificate exposure.
+- **Layer 2 (Business Intelligence Layer):** Separately computes transport emissions based on shipment route distance and transport mode factors. This transport footprint is tracked for corporate ESG carbon-story reporting but is strictly excluded from the regulatory CBAM liability calculation to ensure legal compliance with EU Regulation 2023/956.
 
-A Solana smart contract stores a minimal version of the trade event on-chain. The record is not meant to hold large documents or the full final report. Instead, it stores structured proof that a shipment record was submitted, by whom, and in what state.
+### Step 5: Report Generation
+The **ReportGenerationAgent** takes the structured calculation results and sends them to the **Gemini 1.5 Flash** API with a strict system prompt. The model generates a professional, human-readable compliance summary including a shipment summary, emissions breakdown, confidence assessment, and an audit trail mapping the Solana transactions.
 
-Example on-chain fields:
+### Step 6: Aggregation and Analytics
+The **AnalyticsInsightAgent** aggregates the new data across the importer's portfolio (total tCO₂ by country, product, and supplier; total CBAM certificate costs). It uses Gemini to write a brief narrative summary card (e.g., "Turkish steel accounts for 67% of your CBAM exposure..."). The results are written to a dashboard cache for the frontend to render.
 
-- Trade ID
-- Importer wallet or company identifier
-- Supplier identifier
-- Product type
-- Quantity
-- Origin country
-- Destination country
-- Submission timestamp
-- External invoice or receipt reference
-- Hash of attached off-chain document bundle
-- Workflow status
-
-This keeps the blockchain layer lightweight, explainable, and aligned with real audit needs.
-
-### Step 3: Logistics firm approves the shipment
-
-A second actor, such as a logistics company or shipment-verification partner, confirms key shipment details on-chain. This is one of the most important design choices in the project.
-
-Instead of making Solana a passive archive, Scope4 uses it as a multi-party trust layer. The importer cannot unilaterally push a trade into the compliance engine as final. The shipment first moves into a "pending" state and only becomes "approved" when the logistics actor validates it.
-
-The logistics actor does not approve the carbon calculation. Its role is narrower and more realistic: it confirms operational shipment facts such as shipment reference, origin, and quantity consistency. After that approval, the contract emits an event that triggers the AI workflow.
-
-### Step 4: AI agent detects the approved event
-
-The AI agent backend listens for approved trade events emitted by the smart contract. Once an approval is detected, the agent retrieves the structured shipment payload and begins the compliance workflow.
-
-This event-driven pattern is critical to the project narrative. It shows that the AI system is not acting on arbitrary user input alone; it acts on an attested workflow event that has already passed through a multi-party blockchain checkpoint.
-
-### Step 5: AI agent enriches the record with carbon data
-
-The AI agent queries an internal structured dataset rather than browsing the live web during the demo. This dataset contains country- and product-level emissions assumptions and reporting parameters for the supported demo scope.
-
-For the MVP:
-
-- Supported origin countries: Turkey and China
-- Supported product categories: the architecture is extensible, but the demo implementation should remain narrow enough to fully work
-- Carbon data source: hardcoded or structured internal dataset for demo reliability
-
-This design choice reduces demo risk and improves reproducibility. A live web-browsing agent may sound more impressive, but it is much more likely to fail in a timed judging session.
-
-### Step 6: AI agent calculates compliance outputs
-
-Once the shipment data and carbon-intensity assumptions are available, the agent computes:
-
-- Estimated embedded emissions for the shipment
-- Emissions intensity per supported product logic
-- A CBAM-relevant cost or exposure estimate
-- Status flags for confidence, missing fields, or use of default assumptions
-
-The goal is not to claim legal finality. The goal is to generate a credible, structured compliance artifact that helps importers understand risk and prepare reporting faster.
-
-### Step 7: AI agent generates a human-readable report
-
-After calculation, the AI system turns the structured output into a readable compliance summary that can be used internally by importers and externally for audit preparation.
-
-The report may include:
-
-- Shipment summary
-- Source and destination context
-- Emissions assumptions used
-- Estimated embedded carbon
-- Estimated CBAM liability or exposure
-- Data-confidence notes
-- Evidence references
-- Audit trail summary
-
-### Step 8: Dashboard displays the full audit trail and business intelligence layer
-
-The frontend dashboard shows the progression of each shipment through the system:
-
-- Submitted by importer
-- Approved by logistics actor
-- Processed by AI agent
-- Report generated
-- Compliance package ready
-
-In addition to workflow visibility, Scope4 includes an interactive analytics dashboard that helps the importing company understand its carbon-tax story over time. The dashboard is not only a compliance monitor; it is also a financial and operational decision-support layer that can create direct business value from the collected trade and emissions data.
-
-The dashboard should allow the company to explore:
-
-- Estimated CBAM-related tax or certificate exposure across shipments
-- Total spending driven by carbon-related import obligations
-- Total embedded emissions associated with imported goods
-- Emissions trends over time by shipment, product, supplier, and origin country
-- Scope 1, Scope 2, and Scope 3 categorization views where relevant to the reporting model
-- Estimated emissions contribution by scope category
-- High-risk suppliers, products, or routes with elevated carbon cost exposure
-- Comparison of lower-emission versus higher-emission sourcing patterns
-
-An AI agent supports this dashboard by classifying shipment-related emissions into the relevant scope categories using imported-goods metadata, historical records, and previously learned patterns from the internal data model. This allows the company to move beyond static reporting and start using the platform as an emissions-intelligence and cost-analysis tool.
-
-From a product strategy perspective, this dashboard matters because it expands Scope4 from a pure compliance utility into a decision-support platform. Instead of only answering "Are we compliant?" the system also answers "What is carbon regulation costing us?" "Where are our largest emissions exposures?" and "Which sourcing patterns create the highest financial and environmental burden?"
-
-This gives the project a clearer path to financial value creation. A company could use Scope4 not only to reduce reporting friction, but also to optimize sourcing, compare suppliers, forecast regulatory cost exposure, and identify the operational drivers behind its imported carbon footprint. In a hackathon setting, this also makes the demo more compelling because the dashboard shows visible analytical value in addition to blockchain workflow automation.
+---
 
 ## Why Blockchain Is Used
 
 A central question the project must answer is: why use blockchain at all?
 
-The answer is that Scope4 is not using blockchain because payments need to be tokenized. It is using blockchain because carbon-compliance workflows require a shared source of truth across actors who do not naturally trust one another, including importers, logistics partners, auditors, and potentially regulators.
+Scope4 is using blockchain because carbon-compliance workflows require a shared source of truth across actors who do not naturally trust one another, including importers, suppliers, logistics partners, auditors, and regulators.
 
-If all records sit only in a private vendor database, every stakeholder must trust the software provider's internal system. By contrast, an on-chain event log creates an immutable and independently verifiable sequence of approvals and state changes. In the Scope4 design, this improves:
+If all records sit only in a private vendor database, every stakeholder must trust the software provider's internal system. By contrast, an on-chain event log creates an immutable, independently verifiable sequence of approvals and state changes.
 
-- Trustworthiness of shipment attestation
-- Resistance to silent record modification
-- Transparency of the compliance workflow
-- Cross-party auditability
-- Sponsor alignment with Solana and Blockchain for Good themes
+In the Scope4 design, this improves:
+- **Trustworthiness of shipment attestation:** The seller declares the intensity, the importer declares the commercial volume, and the logistics partner confirms the physical movement. None of them can retrospectively edit their inputs to avoid tax liability without breaking the on-chain cryptographic signatures.
+- **Resistance to silent record modification:** Document hashes (SHA-256) are stored on-chain. If an importer attempts to alter an invoice or certificate PDF, the hash will no longer match the Solana record, invalidating the audit trail.
+- **Workflow coordination:** The AI engine is triggered by a verifiable state change (`ReadyForProcessing`) that can only be reached when all three parties have signed.
 
-The blockchain role is therefore limited and purposeful: coordinate trust, not replace the entire trade ecosystem.
+---
 
 ## Why AI Agents Are Used
 
 AI agents are the automation and interpretation layer of the system.
 
-Traditional compliance tooling often stops at recordkeeping or dashboards. Scope4 goes further by making the system reactive. Once an approved shipment event appears on-chain, the agent automatically starts the next steps: enrich data, apply the compliance logic, compute the estimate, and generate the report.
+Scope4 goes beyond standard compliance recordkeeping by making the system fully reactive. Once the on-chain checkpoint is passed, the agent daemon coordinates validation, calculation, and output formatting.
 
-AI is useful in this context for three reasons:
+AI is used for three reasons:
+- **Automated report writing:** It translates complex, multi-party shipment facts and formulas into professional, natural-language business reports that compliance teams and auditors can read.
+- **Discrepancy explanation:** If the validation agent flags a discrepancy (e.g., a weight difference or mismatched product type), the LLM explains the potential cause and highlights the specific actor's input.
+- **Dashboard insights:** It parses portfolio arrays (emissions by route, country, and product) to generate contextual text summaries that highlight carbon-tax risks and supplier performance, transforming raw numbers into decision-making logic.
 
-- It reduces manual work in recurring compliance tasks.
-- It converts structured calculations into readable reports for operations and compliance teams.
-- It can flag uncertainty, missing information, or suspicious data patterns before reporting is finalized.
-
-This makes the product a genuine AI + Web3 workflow rather than a blockchain-only proof-of-concept or an LLM wrapper with no trust layer.
+---
 
 ## What Problems Scope4 Solves
 
-Scope4 aims to solve the following business and policy problems:
+Scope4 solves the following business and policy problems:
 
-### 1. Manual CBAM compliance overhead
+1. **Manual CBAM compliance overhead:** Replaces manual emails and spreadsheets with a single coordinated workflow.
+2. **Weak auditability:** Provides a single, tamper-resistant audit trail where documents, signatures, and calculation steps are linked.
+3. **Greenwashing and data manipulation:** Prevents selective omission or retrofitted carbon accounting by freezing the data state on Solana.
+4. **Poor cross-party trust:** Establishes a shared record between exporters, buyers, and logistics companies.
+5. **Legally inflated carbon estimates:** Protects importers by keeping transport emissions separated from the regulatory CBAM liability reporting, while still maintaining full footprint tracking for corporate ESG analytics.
 
-Importers face growing reporting complexity as CBAM moves into its definitive regime, increasing the burden of gathering shipment and emissions data.
-
-### 2. Weak auditability
-
-Compliance evidence is often dispersed across multiple systems and file types, which makes later verification harder.
-
-### 3. Greenwashing and unverifiable claims
-
-When environmental reporting depends on editable and siloed records, it becomes easier to manipulate or selectively omit information.
-
-### 4. Poor cross-party trust
-
-Importers, suppliers, logistics actors, and auditors may each hold partial information, but they lack a shared and tamper-resistant event history.
-
-### 5. Delayed reporting decisions
-
-Without automation, companies discover data gaps too late, increasing the risk of poor reporting quality and compliance stress.
+---
 
 ## Prize Strategy
 
-Scope4 is intentionally designed to fit several hackathon tracks and bounties shown in the event materials.
+Scope4 is intentionally designed to fit several hackathon tracks and bounties:
 
-### Main Track
+- **Main Track (AI + Web3 Intersection):** Integrates Solana state tracking with an event-driven AI agent workflow, showing how blockchain serves as a trust anchor for automated AI reasoning.
+- **Solana Prize (AI Agents on Solana):** Implements Program Derived Addresses (PDAs) to orchestrate supply chain roles, triggering the Gemini-powered agent service using on-chain state readiness.
+- **Blockchain for Good Alliance:** Builds environmental accountability infrastructure, targeting carbon-accounting transparency and reducing regulatory fraud.
+- **Mood Global Services (Innovative AI Use Case):** Uses AI not as a generic chatbot, but as an operational system agent performing multi-source validation, math parsing, and automated reporting.
+- **SiteLab (Best Landing Page/Website):** Builds a polished, dark-mode, glass-morphism web dashboard that includes a dedicated landing page detailing the 4-actor solution.
 
-The Main Track calls for projects at the intersection of AI and Web3, especially trust layers for AI, autonomous coordination systems, and bold but functional products. Scope4 fits because the project combines a blockchain-based attestation workflow with an event-driven AI compliance agent, producing a trust-enabled automation layer for carbon reporting.
-
-### Solana Prize
-
-The Solana bounty asks for AI agents on Solana. Scope4 directly matches this requirement because a Solana smart contract emits the event that triggers the AI workflow. The on-chain state is not decorative; it controls the workflow transition from pending submission to approved compliance processing.
-
-### Blockchain for Good Alliance
-
-The Blockchain for Good bounty focuses on social and environmental impact, transparency and accountability, interoperability, and scalable solutions. Scope4 aligns strongly because it targets carbon-accountability infrastructure, helps reduce greenwashing risk, and improves trust in sustainability reporting.
-
-### Mood Global Services
-
-Mood Global seeks the best innovative AI use case. Scope4 is relevant because AI is not used as a chatbot gimmick; it is embedded into a real-world operational workflow where it performs compliance reasoning, structured calculation, and report generation after an on-chain attestation event.
-
-### SiteLab
-
-SiteLab rewards the best landing page or website for the idea. Scope4 plans to build a strong public-facing web experience that explains the problem, demonstrates the workflow, and presents the product with polished UX and visual clarity.
-
-### Terna
-
-The project does not target Terna because the Terna bounty is focused on AI-based electricity-grid and climate-risk analysis, especially around weather and landslide-related infrastructure monitoring. Scope4 is unrelated to that use case, so not applying is a strategic choice.
-
-## Prize Requirements and How Scope4 Responds
-
-The event materials indicate several baseline judging and submission requirements:
-
-- A public open-source code repository must be provided.
-- If applicable, deployed contract addresses should be shared.
-- A walkthrough video or demo of up to 3 minutes is required.
-- Teams will present in a short live demo format followed by Q&A.
-- Judging heavily rewards live code, full implementation of claimed functionality, usability, feasibility, and innovation.
-
-These requirements strongly influence the Scope4 product design. The project deliberately avoids unnecessary complexity, such as real on-chain import payment settlement, because such features would increase failure risk without materially improving prize fit.
-
-Instead, the MVP focuses on an end-to-end workflow that can be fully demonstrated:
-
-- Submit shipment
-- Approve shipment on-chain
-- Trigger AI agent
-- Compute result
-- Generate report
-- Show dashboard and landing page
-
-This increases the chance of scoring well on the event's code, feasibility, and navigation criteria.
+---
 
 ## Product Boundaries for the Hackathon MVP
 
-To keep the project feasible, the MVP should have clearly defined constraints.
+To keep the project feasible, the MVP has clearly defined constraints:
 
 ### In scope
-
-- One strong end-to-end demo scenario
-- Turkey and China as origin countries
-- Solana smart contract for workflow attestation
-- Logistics approval step on-chain
-- AI-triggered compliance pipeline
-- Structured carbon-intensity dataset for demo use
-- Dashboard for workflow visibility
-- Strong landing page for SiteLab eligibility
+- One complete happy-path demo scenario (Turkey/China to Italy).
+- 4-Actor role switcher in the frontend header to allow easy live demonstrations.
+- Solana Devnet smart contract implementing `ComplianceBundle`, `SellerAttestation`, `TradeRecord`, and `LogisticsAttestation` PDAs.
+- Deterministic Validation and Emissions Calculation modules.
+- Gemini 1.5 Flash report generation and dashboard insight generation.
+- Polished, dark-mode dashboard with charts mapping embedded emissions, transport footprints, and estimated CBAM costs.
+- Separate landing page design.
 
 ### Out of scope
+- Real on-chain commercial payment or invoice settlement.
+- Real Phantom wallet signatures for all three actors (all wallets are simulated using generated keypairs and signed programmatically to allow smooth, single-operator demo flows).
+- Real-time regulatory web scraping (uses the internal `emissions_factors.json` static data).
+- PDF download exports (simulated via preview in browser).
 
-- Real on-chain commercial settlement of import payments
-- Full support for every possible exporter country
-- Full legal-grade enterprise integrations
-- Real-time browsing across live regulatory sources during the demo
-- Complex multi-sponsor feature creep that weakens the core use case
+---
 
-## Proposed Demo Narrative
+## Proposed Demo Scenario
 
-The live demo should tell a simple story:
+```
+[0:00 – 0:20]  Landing page: "Automate CBAM compliance. Trustlessly." Explain the 4-Actor model.
+[0:20 – 0:55]  Switch to [🏭 Seller] role. Submit steel emissions intensity (1.89 tCO₂/t)
+               and upload verification doc. Submit -> Solana tx links to Explorer.
+[0:55 – 1:30]  Switch to [🏢 Importer] role. Submit purchase invoice for 500 tonnes of steel
+               from Turkey destined for Italy. Submit -> Solana tx logs the invoice hash.
+[1:30 – 2:00]  Switch to [🚢 Logistics] role. Review cargo weight and route.
+               Submit approval -> Solana tx triggers state update: "Ready for Processing".
+[2:00 – 2:30]  Switch to [🏢 Importer] role. Observe polling status "Processing..."
+               changing to "Report Ready". Click to open report.
+[2:30 – 3:15]  Show Compliance Report: Highlight CBAM Reporting Layer (945 tCO₂ embedded,
+               estimated €47,250 obligation) separate from BI Layer (13.2 tCO₂ transport).
+               Show the immutable audit trail linked to the Solana Explorer.
+[3:15 – 4:00]  Show Dashboard: Aggregate ESG widgets, emissions charts, and the
+               Gemini-generated portfolio summary explaining carbon exposure risk.
+```
 
-An Italian importer buys a CBAM-covered good from Turkey or China. The importer submits the shipment in Scope4. The logistics partner validates the shipment details on Solana. That approval triggers an AI agent, which retrieves the shipment data, applies the carbon-intensity assumptions, calculates the estimated compliance exposure, and generates an auditable report. The dashboard then shows the shipment's full journey from submission to compliance-ready output.
+---
 
-This narrative is easy to grasp, visibly uses both AI and blockchain, and maps directly to the prizes the project is targeting.
+## Risk Mitigation & Fallback Matrix
 
-## Why This Project Is Strong for a Hackathon
-
-Scope4 is a strong hackathon project because it has a real regulatory use case, a credible market need, a clear reason to use blockchain, and a clear reason to use AI. It also benefits from being demonstrable in a short time window.
-
-Many hackathon projects are either technically flashy but commercially weak, or commercially plausible but technologically generic. Scope4 is stronger because it ties the technology choices directly to the workflow design:
-
-- Blockchain is used for shared trust and auditability.
-- AI is used for automation and report generation.
-- The web app is used for usability and sponsor alignment.
-- The scope is narrow enough to ship.
-
-That combination makes the project more defensible in front of judges evaluating novelty, execution quality, and real-world usefulness.
-
-## Final Positioning Statement
-
-Scope4 is an AI-powered carbon compliance platform built on Solana that helps EU importers automate CBAM workflows through a shared, auditable evidence trail. Importers submit shipment data, logistics partners attest shipment details on-chain, and AI agents transform those trusted events into carbon estimates and compliance-ready reports. The project is designed to compete across Main Track, Solana, Blockchain for Good, Mood Global, and SiteLab by combining environmental impact, trust infrastructure, agentic automation, and a clear live-demo product story.
+| Failure | Fallback |
+|---|---|
+| **Solana Devnet down** | Enable `DEMO_MODE=true` in `.env` to bypass blockchain writes, logging simulated transaction hashes in the database. |
+| **Agent service slow** | Pre-generated reports are stored in the database for the demo trade ID and loaded instantly if the agent is unresponsive. |
+| **Gemini API quota** | Fallback to local cached summary narratives and cached markdown reports. |
+| **Supabase database down** | Entire client switches to local React context loaded from `fixtures.ts`. |
