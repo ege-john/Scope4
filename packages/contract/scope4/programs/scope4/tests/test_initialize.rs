@@ -16,6 +16,7 @@ use solana_transaction::Transaction;
 fn test_initialize_bundle_and_trade_record() {
     let program_id = scope4::ID;
     let mut svm = LiteSVM::new();
+    svm.add_program_from_file(program_id, "../../target/deploy/scope4.so").unwrap();
 
     let importer = Keypair::new();
     svm.airdrop(&importer.pubkey(), 10_000_000_000).unwrap();

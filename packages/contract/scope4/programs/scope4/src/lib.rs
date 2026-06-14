@@ -1,4 +1,6 @@
+#![allow(clippy::diverging_sub_expression)]
 use anchor_lang::prelude::*;
+
 
 declare_id!("4jokhc6jDx663fiPNdyFs18ywus6KCiGZcDx4aW53duF");
 
