@@ -2,15 +2,15 @@
 
 ## Project Overview
 
-Scope4 is a B2B compliance platform that combines blockchain and AI agents to automate CBAM compliance workflows and produce auditable ESG-ready carbon reporting for importers of carbon-intensive goods. The project is designed around a simple but high-impact thesis: cross-border carbon compliance is becoming a mandatory business process, yet the data collection, validation, and reporting flow is still fragmented, manual, and vulnerable to manipulation or error.[cite:5][cite:34]
+Scope4 is a B2B compliance platform that combines blockchain and AI agents to automate CBAM compliance workflows and produce auditable ESG-ready carbon reporting for importers of carbon-intensive goods. The project is designed around a simple but high-impact thesis: cross-border carbon compliance is becoming a mandatory business process, yet the data collection, validation, and reporting flow is still fragmented, manual, and vulnerable to manipulation or error.
 
 The initial product focus is on EU importers dealing with CBAM-covered goods from Turkey and China. Instead of trying to cover every geography and every trade pattern, the project narrows the scope to the most demoable and most defensible version of the problem: an importer submits a shipment record, a logistics actor confirms the shipment on-chain, and an AI agent then calculates the emissions-related compliance output and generates a report.
 
-This framing makes the project both practical and differentiated. It is practical because it focuses on the core compliance bottleneck rather than trying to reinvent global trade finance. It is differentiated because it uses Solana not merely as a database substitute, but as a multi-party trust layer where more than one actor participates in the evidence trail before the AI workflow begins.[cite:36][cite:68]
+This framing makes the project both practical and differentiated. It is practical because it focuses on the core compliance bottleneck rather than trying to reinvent global trade finance. It is differentiated because it uses Solana not merely as a database substitute, but as a multi-party trust layer where more than one actor participates in the evidence trail before the AI workflow begins.
 
 ## The Problem
 
-The European Union's Carbon Border Adjustment Mechanism (CBAM) requires importers of specified carbon-intensive goods to report embedded emissions and comply with a more formal declaration and certificate regime from 2026 onward.[cite:5][cite:34] This creates a new operational burden for importers, especially those buying from non-EU countries where emissions accounting methods, carbon pricing systems, and documentation quality may differ significantly.[cite:34]
+The European Union's Carbon Border Adjustment Mechanism (CBAM) requires importers of specified carbon-intensive goods to report embedded emissions and comply with a more formal declaration and certificate regime from 2026 onward. This creates a new operational burden for importers, especially those buying from non-EU countries where emissions accounting methods, carbon pricing systems, and documentation quality may differ significantly.
 
 Today, many businesses still rely on spreadsheets, email chains, supplier questionnaires, and fragmented trade documentation to assemble CBAM evidence. This creates five clear problems:
 
@@ -20,7 +20,7 @@ Today, many businesses still rely on spreadsheets, email chains, supplier questi
 - Auditability is weak because supporting evidence is scattered across emails, PDFs, and internal systems.
 - Greenwashing and data manipulation become easier when the reporting trail is centralized and editable.
 
-For a regulator, auditor, or enterprise compliance team, the hardest part is not only calculating a carbon number. The harder problem is proving that a shipment record, supporting documents, and emissions assumptions were captured in a trustworthy sequence and were not silently altered later.[cite:34][cite:43]
+For a regulator, auditor, or enterprise compliance team, the hardest part is not only calculating a carbon number. The harder problem is proving that a shipment record, supporting documents, and emissions assumptions were captured in a trustworthy sequence and were not silently altered later.
 
 ## The Solution
 
@@ -30,7 +30,7 @@ Scope4 addresses this problem by combining three elements into one workflow:
 2. A Solana-based smart-contract layer that records the trade attestation and logistics approval as immutable workflow events.
 3. An AI agent system that reacts to approved on-chain events, computes CBAM-relevant outputs, and generates a structured compliance report.
 
-The product does not attempt to move the underlying commercial payment for imports onto blockchain. That choice is deliberate. For the hackathon, the highest-value role of blockchain is not payment settlement but trust, auditability, shared verification, and workflow coordination between multiple parties.[cite:36][cite:68]
+The product does not attempt to move the underlying commercial payment for imports onto blockchain. That choice is deliberate. For the hackathon, the highest-value role of blockchain is not payment settlement but trust, auditability, shared verification, and workflow coordination between multiple parties.
 
 The result is a compliance product where blockchain secures the evidence trail and AI automates the reasoning and reporting layer.
 
@@ -159,7 +159,7 @@ This gives the project a clearer path to financial value creation. A company cou
 
 A central question the project must answer is: why use blockchain at all?
 
-The answer is that Scope4 is not using blockchain because payments need to be tokenized. It is using blockchain because carbon-compliance workflows require a shared source of truth across actors who do not naturally trust one another, including importers, logistics partners, auditors, and potentially regulators.[cite:60][cite:68]
+The answer is that Scope4 is not using blockchain because payments need to be tokenized. It is using blockchain because carbon-compliance workflows require a shared source of truth across actors who do not naturally trust one another, including importers, logistics partners, auditors, and potentially regulators.
 
 If all records sit only in a private vendor database, every stakeholder must trust the software provider's internal system. By contrast, an on-chain event log creates an immutable and independently verifiable sequence of approvals and state changes. In the Scope4 design, this improves:
 
@@ -191,11 +191,11 @@ Scope4 aims to solve the following business and policy problems:
 
 ### 1. Manual CBAM compliance overhead
 
-Importers face growing reporting complexity as CBAM moves into its definitive regime, increasing the burden of gathering shipment and emissions data.[cite:5][cite:34]
+Importers face growing reporting complexity as CBAM moves into its definitive regime, increasing the burden of gathering shipment and emissions data.
 
 ### 2. Weak auditability
 
-Compliance evidence is often dispersed across multiple systems and file types, which makes later verification harder.[cite:34]
+Compliance evidence is often dispersed across multiple systems and file types, which makes later verification harder.
 
 ### 3. Greenwashing and unverifiable claims
 
@@ -215,37 +215,37 @@ Scope4 is intentionally designed to fit several hackathon tracks and bounties sh
 
 ### Main Track
 
-The Main Track calls for projects at the intersection of AI and Web3, especially trust layers for AI, autonomous coordination systems, and bold but functional products.[cite:17] Scope4 fits because the project combines a blockchain-based attestation workflow with an event-driven AI compliance agent, producing a trust-enabled automation layer for carbon reporting.
+The Main Track calls for projects at the intersection of AI and Web3, especially trust layers for AI, autonomous coordination systems, and bold but functional products. Scope4 fits because the project combines a blockchain-based attestation workflow with an event-driven AI compliance agent, producing a trust-enabled automation layer for carbon reporting.
 
 ### Solana Prize
 
-The Solana bounty asks for AI agents on Solana.[cite:18] Scope4 directly matches this requirement because a Solana smart contract emits the event that triggers the AI workflow. The on-chain state is not decorative; it controls the workflow transition from pending submission to approved compliance processing.
+The Solana bounty asks for AI agents on Solana. Scope4 directly matches this requirement because a Solana smart contract emits the event that triggers the AI workflow. The on-chain state is not decorative; it controls the workflow transition from pending submission to approved compliance processing.
 
 ### Blockchain for Good Alliance
 
-The Blockchain for Good bounty focuses on social and environmental impact, transparency and accountability, interoperability, and scalable solutions.[cite:18] Scope4 aligns strongly because it targets carbon-accountability infrastructure, helps reduce greenwashing risk, and improves trust in sustainability reporting.
+The Blockchain for Good bounty focuses on social and environmental impact, transparency and accountability, interoperability, and scalable solutions. Scope4 aligns strongly because it targets carbon-accountability infrastructure, helps reduce greenwashing risk, and improves trust in sustainability reporting.
 
 ### Mood Global Services
 
-Mood Global seeks the best innovative AI use case.[cite:18] Scope4 is relevant because AI is not used as a chatbot gimmick; it is embedded into a real-world operational workflow where it performs compliance reasoning, structured calculation, and report generation after an on-chain attestation event.
+Mood Global seeks the best innovative AI use case. Scope4 is relevant because AI is not used as a chatbot gimmick; it is embedded into a real-world operational workflow where it performs compliance reasoning, structured calculation, and report generation after an on-chain attestation event.
 
 ### SiteLab
 
-SiteLab rewards the best landing page or website for the idea.[cite:18] Scope4 plans to build a strong public-facing web experience that explains the problem, demonstrates the workflow, and presents the product with polished UX and visual clarity.
+SiteLab rewards the best landing page or website for the idea. Scope4 plans to build a strong public-facing web experience that explains the problem, demonstrates the workflow, and presents the product with polished UX and visual clarity.
 
 ### Terna
 
-The project does not target Terna because the Terna bounty is focused on AI-based electricity-grid and climate-risk analysis, especially around weather and landslide-related infrastructure monitoring.[cite:17] Scope4 is unrelated to that use case, so not applying is a strategic choice.
+The project does not target Terna because the Terna bounty is focused on AI-based electricity-grid and climate-risk analysis, especially around weather and landslide-related infrastructure monitoring. Scope4 is unrelated to that use case, so not applying is a strategic choice.
 
 ## Prize Requirements and How Scope4 Responds
 
 The event materials indicate several baseline judging and submission requirements:
 
-- A public open-source code repository must be provided.[cite:16]
-- If applicable, deployed contract addresses should be shared.[cite:16]
-- A walkthrough video or demo of up to 3 minutes is required.[cite:16]
-- Teams will present in a short live demo format followed by Q&A.[cite:16]
-- Judging heavily rewards live code, full implementation of claimed functionality, usability, feasibility, and innovation.[cite:16]
+- A public open-source code repository must be provided.
+- If applicable, deployed contract addresses should be shared.
+- A walkthrough video or demo of up to 3 minutes is required.
+- Teams will present in a short live demo format followed by Q&A.
+- Judging heavily rewards live code, full implementation of claimed functionality, usability, feasibility, and innovation.
 
 These requirements strongly influence the Scope4 product design. The project deliberately avoids unnecessary complexity, such as real on-chain import payment settlement, because such features would increase failure risk without materially improving prize fit.
 
@@ -258,7 +258,7 @@ Instead, the MVP focuses on an end-to-end workflow that can be fully demonstrate
 - Generate report
 - Show dashboard and landing page
 
-This increases the chance of scoring well on the event's code, feasibility, and navigation criteria.[cite:16]
+This increases the chance of scoring well on the event's code, feasibility, and navigation criteria.
 
 ## Product Boundaries for the Hackathon MVP
 
@@ -302,8 +302,8 @@ Many hackathon projects are either technically flashy but commercially weak, or 
 - The web app is used for usability and sponsor alignment.
 - The scope is narrow enough to ship.
 
-That combination makes the project more defensible in front of judges evaluating novelty, execution quality, and real-world usefulness.[cite:16][cite:17][cite:18]
+That combination makes the project more defensible in front of judges evaluating novelty, execution quality, and real-world usefulness.
 
 ## Final Positioning Statement
 
-Scope4 is an AI-powered carbon compliance platform built on Solana that helps EU importers automate CBAM workflows through a shared, auditable evidence trail. Importers submit shipment data, logistics partners attest shipment details on-chain, and AI agents transform those trusted events into carbon estimates and compliance-ready reports. The project is designed to compete across Main Track, Solana, Blockchain for Good, Mood Global, and SiteLab by combining environmental impact, trust infrastructure, agentic automation, and a clear live-demo product story.[cite:16][cite:17][cite:18]
+Scope4 is an AI-powered carbon compliance platform built on Solana that helps EU importers automate CBAM workflows through a shared, auditable evidence trail. Importers submit shipment data, logistics partners attest shipment details on-chain, and AI agents transform those trusted events into carbon estimates and compliance-ready reports. The project is designed to compete across Main Track, Solana, Blockchain for Good, Mood Global, and SiteLab by combining environmental impact, trust infrastructure, agentic automation, and a clear live-demo product story.
