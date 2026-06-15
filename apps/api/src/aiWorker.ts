@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { supabase, getBundleWithAll, markBundleProcessing, markBundleComplete } from '@scope4/db';
+import { supabase, getBundleWithAll, markBundleProcessing, markBundleComplete, writeAuditEvent } from '@scope4/db';
 
 // ── Gemini setup ─────────────────────────────────────────────────────────────
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -98,6 +98,13 @@ Please respond ONLY with a valid JSON object matching this exact structure:
 
     if (insertErr) {
       console.error(`[AI Worker] DB insert error: ${insertErr.message}`);
+      await writeAuditEvent({
+        trade_id: tradeId,
+        event_type: 'ai_processing_failed',
+        actor_type: 'system',
+        actor_identity: 'ai_worker',
+        payload: { error: insertErr.message, report }
+      });
       await supabase.from('compliance_bundles')
         .update({ bundle_status: 'failed' })
         .eq('trade_id', tradeId);
@@ -110,6 +117,13 @@ Please respond ONLY with a valid JSON object matching this exact structure:
 
   } catch (err: any) {
     console.error(`[AI Worker] Error processing ${tradeId}:`, err.message);
+    await writeAuditEvent({
+      trade_id: tradeId,
+      event_type: 'ai_processing_failed',
+      actor_type: 'system',
+      actor_identity: 'ai_worker',
+      payload: { error: err.message, stack: err.stack }
+    });
     await supabase.from('compliance_bundles')
       .update({ bundle_status: 'failed' })
       .eq('trade_id', tradeId);
