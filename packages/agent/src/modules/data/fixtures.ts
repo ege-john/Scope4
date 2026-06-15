@@ -169,7 +169,7 @@ export function getBundleDetail(trade_id: string): BundleDetailResponse {
     confidence_level: 'high',
     confidence_notes: [],
     report_text: `# CBAM Compliance Report — ${demo.trade_id}\n\n## CBAM Compliance\n> CBAM liability = production-embedded emissions only (EU Reg 2023/956).\n\n- **CBAM-liable embedded emissions**: ${cbam_embedded_tco2.toFixed(1)} tCO₂\n- **Estimated CBAM certificate obligation**: €${cbam_exposure_eur.toFixed(0)} _(€50/tCO₂ placeholder)_\n\n## Carbon Footprint Overview _(BI Layer — Not CBAM-Liable)_\n- **Transport emissions**: ${transport_tco2.toFixed(2)} tCO₂ _(internal analytics only)_\n- **Portfolio carbon footprint**: ${portfolio_carbon_tco2.toFixed(1)} tCO₂\n\n*All attestations recorded on Solana Devnet.*`,
-    llm_model_used: 'gemini-1.5-flash',
+    llm_model_used: 'gemini-2.5-flash',
     generated_at: bundle.completed_at!,
     created_at: bundle.completed_at!,
   }

@@ -18,7 +18,7 @@ import type { ComplianceBundle, ValidationResult, CalculationResult } from '@sco
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '')
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
 const SYSTEM_PROMPT = `You are a professional CBAM (Carbon Border Adjustment Mechanism) compliance analyst.
 You receive a structured JSON object with verified shipment data and calculation results.

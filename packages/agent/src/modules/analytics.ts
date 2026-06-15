@@ -21,7 +21,7 @@ import type { DashboardInsight } from '@scope4/types'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY ?? '')
-const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
 // ─── Main entry point (called by agent orchestrator after each completed bundle) ─
 
