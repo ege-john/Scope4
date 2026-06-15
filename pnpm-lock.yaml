@@ -26,6 +26,9 @@ importers:
       '@hono/node-server':
         specifier: ^2.0.4
         version: 2.0.4(hono@4.12.25)
+      '@scope4/agent':
+        specifier: workspace:*
+        version: link:../../packages/agent
       '@scope4/db':
         specifier: workspace:*
         version: link:../../packages/db
