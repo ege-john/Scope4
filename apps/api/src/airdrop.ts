@@ -15,7 +15,7 @@ const seller = loadKeypair('SELLER_DEMO_KEYPAIR');
 const importer = loadKeypair('IMPORTER_DEMO_KEYPAIR');
 const logistics = loadKeypair('LOGISTICS_DEMO_KEYPAIR');
 
-const connection = new Connection('http://127.0.0.1:8899', 'confirmed');
+const connection = new Connection(process.env.SOLANA_RPC_URL || 'http://127.0.0.1:8899', 'confirmed');
 
 async function airdrop(keypair: Keypair | null, name: string) {
   if (!keypair) return;
