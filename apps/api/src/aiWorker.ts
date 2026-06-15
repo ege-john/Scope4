@@ -51,23 +51,26 @@ CBAM CONTEXT:
 - Transport emissions = estimate based on route (e.g. TR->IT ship ~0.05 tCO2/t).
 - The EU ETS carbon price is approximately 65 EUR/tCO₂.
 
-Please respond ONLY with a valid JSON object (no markdown) matching this exact schema:
+Please respond ONLY with a valid JSON object matching this exact structure:
 {
-  "validation_passed": <boolean>,
-  "validation_flags": [<string>],
-  "intensity_source": "seller_direct" | "seller_default" | "system_default",
-  "embedded_tco2": <number>,
-  "cbam_exposure_eur": <number>,
-  "transport_tco2": <number>,
-  "total_tco2": <number>,
-  "confidence_level": "high" | "medium" | "low",
-  "confidence_notes": [<string>],
-  "report_text": "<A concise 2-sentence summary>"
+  "validation_passed": true,
+  "validation_flags": ["Missing data"],
+  "intensity_source": "seller_direct",
+  "embedded_tco2": 100.5,
+  "cbam_exposure_eur": 5000.0,
+  "transport_tco2": 50.2,
+  "total_tco2": 150.7,
+  "confidence_level": "high",
+  "confidence_notes": ["Good data"],
+  "report_text": "Summary here."
 }
 `;
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' }
+    });
     const text = result.response.text().trim();
 
     // Strip any accidental markdown fences
