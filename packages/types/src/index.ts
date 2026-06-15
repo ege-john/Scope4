@@ -116,8 +116,8 @@ export interface DashboardInsight {
   computed_at: string
   period_start: string
   period_end: string
-  total_tco2: number
-  total_cbam_eur: number
+  total_tco2: number           // CBAM-liable embedded tCO₂ aggregate
+  total_cbam_eur: number       // estimated CBAM certificate exposure
   top_country: string
   top_product: string
   top_supplier: string
@@ -137,14 +137,19 @@ export interface ValidationResult {
 }
 
 export interface CalculationResult {
-  // CBAM Reporting Layer (regulatory — production-embedded only)
-  cbam_embedded_tco2: number
-  cbam_exposure_eur: number
+  // ── CBAM Reporting Layer (regulatory obligation) ──────────────────────────
+  // CBAM under EU Reg 2023/956 = production-embedded emissions ONLY.
+  // Transport is NOT included in the CBAM certificate obligation.
+  cbam_embedded_tco2: number    // base for CBAM certificate calculation
+  cbam_exposure_eur: number     // cbam_embedded_tco2 × price_placeholder (estimate)
 
-  // Business Intelligence Layer (internal analytics — never added to CBAM)
-  transport_tco2: number
-  portfolio_carbon_tco2: number
+  // ── Business Intelligence Layer (internal analytics only) ─────────────────
+  // These figures are shown in the dashboard carbon-story section.
+  // They are NEVER added to cbam_exposure_eur.
+  transport_tco2: number          // logistics/shipping emissions
+  portfolio_carbon_tco2: number   // cbam_embedded_tco2 + transport_tco2
 
+  // ── Calculation metadata ──────────────────────────────────────────────────
   intensity_source: IntensitySource
   intensity_value_used: number
   distance_km: number
@@ -212,6 +217,7 @@ export interface DashboardSummaryResponse {
 }
 
 // ── Agent module function signatures ─────────────────────────────────────────
+// Member A calls these; Member C implements them.
 
 export type RunValidationFn = (
   bundle: ComplianceBundle,
@@ -220,8 +226,12 @@ export type RunValidationFn = (
   logistics: LogisticsAttestation,
 ) => Promise<ValidationResult>
 
+// CalculateCbamFn and RunCalculationFn are the same type — both names are kept
+// for backward compatibility (A uses CalculateCbamFn, C uses RunCalculationFn).
 export type CalculateCbamFn = (
   validationResult: ValidationResult,
   seller: SellerAttestation,
   trade: TradeRecord,
 ) => Promise<CalculationResult>
+
+export type RunCalculationFn = CalculateCbamFn

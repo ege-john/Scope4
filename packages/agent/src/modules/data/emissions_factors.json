@@ -1,0 +1,29 @@
+{
+  "countries": {
+    "TR": {
+      "steel":       { "intensity_tco2_per_t": 1.89, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "cement":      { "intensity_tco2_per_t": 0.76, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "aluminium":   { "intensity_tco2_per_t": 11.5, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "fertilisers": { "intensity_tco2_per_t": 2.10, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "electricity": { "intensity_tco2_per_mwh": 0.52, "unit": "tCO2/MWh", "source": "IEA 2024 — Turkey grid" }
+    },
+    "CN": {
+      "steel":       { "intensity_tco2_per_t": 2.10, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "cement":      { "intensity_tco2_per_t": 0.82, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "aluminium":   { "intensity_tco2_per_t": 14.2, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "fertilisers": { "intensity_tco2_per_t": 2.45, "unit": "tCO2/tonne", "source": "EU CBAM Default 2024" },
+      "electricity": { "intensity_tco2_per_mwh": 0.61, "unit": "tCO2/MWh", "source": "IEA 2024 — China grid" }
+    }
+  },
+  "transport": {
+    "sea_short":  { "tco2_per_tkm": 0.000010, "max_km": 3000 },
+    "sea_medium": { "tco2_per_tkm": 0.000012, "max_km": 25000 },
+    "road":       { "tco2_per_tkm": 0.000096 }
+  },
+  "distances_km": {
+    "TR_IT": 2200, "TR_DE": 2600, "TR_FR": 2900, "TR_NL": 3100, "TR_ES": 3400,
+    "CN_IT": 19800, "CN_DE": 20200, "CN_FR": 20500, "CN_NL": 20100, "CN_ES": 20900
+  },
+  "cbam_certificate_price_eur_per_tco2": 50,
+  "version": "2024-demo-v1"
+}
