@@ -1,7 +1,6 @@
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import { Program, AnchorProvider, Idl, Wallet } from '@coral-xyz/anchor';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { idlRaw } from './idl';
 
 // ── Environment Variables ──────────────────────────────────────────────────
 const RPC_URL = process.env.SOLANA_RPC_URL || 'http://127.0.0.1:8899';
@@ -31,10 +30,7 @@ export const connection = new Connection(RPC_URL, 'confirmed');
 const defaultWallet = importerKeypair ? new Wallet(importerKeypair) : new Wallet(Keypair.generate());
 export const provider = new AnchorProvider(connection, defaultWallet, { commitment: 'confirmed' });
 
-// Load IDL
-const idlPath = join(process.cwd(), '../../packages/contract/scope4/target/idl/scope4.json');
-const idlRaw = readFileSync(idlPath, 'utf8');
-export const idl = JSON.parse(idlRaw) as Idl;
+export const idl = idlRaw as Idl;
 export const programId = new PublicKey(PROGRAM_ID_STR);
 
 export const program = new Program(idl, provider);
