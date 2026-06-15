@@ -43,6 +43,14 @@ pub mod scope4 {
         let bundle = &mut ctx.accounts.bundle;
         bundle.seller_attested = true;
         check_readiness(bundle)?;
+
+        msg!("Instruction: SubmitSellerAttestation");
+        msg!("facility_id: {}", attest.facility_id);
+        msg!("product_type (0=steel,1=cement,2=aluminium,3=fertilisers,4=electricity): {}", product_type);
+        msg!("emissions_intensity (tCO2/t x1000): {}", emissions_intensity);
+        msg!("methodology (0=direct_measure,1=default_value,2=national_grid): {}", methodology);
+        msg!("seller_wallet: {}", ctx.accounts.seller.key());
+
         Ok(())
     }
 
@@ -66,6 +74,13 @@ pub mod scope4 {
         let bundle = &mut ctx.accounts.bundle;
         bundle.importer_attested = true;
         check_readiness(bundle)?;
+
+        msg!("Instruction: SubmitTradeRecord");
+        msg!("quantity_kg: {}", quantity_kg);
+        msg!("origin_country (0=TR,1=CN): {}", origin_country);
+        msg!("destination_country (0=IT,1=DE,2=FR,3=ES,4=NL): {}", destination_country);
+        msg!("importer_wallet: {}", ctx.accounts.importer.key());
+
         Ok(())
     }
 
@@ -89,6 +104,14 @@ pub mod scope4 {
         let bundle = &mut ctx.accounts.bundle;
         bundle.logistics_attested = true;
         check_readiness(bundle)?;
+
+        msg!("Instruction: SubmitLogisticsAttestation");
+        msg!("quantity_confirmed_kg: {}", quantity_confirmed_kg);
+        msg!("origin_confirmed: {}", origin_confirmed);
+        msg!("route_confirmed: {}", route_confirmed);
+        msg!("dispatch_date (unix): {}", dispatch_date);
+        msg!("logistics_wallet: {}", ctx.accounts.logistics.key());
+
         Ok(())
     }
 }
