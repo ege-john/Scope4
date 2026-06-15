@@ -3,7 +3,7 @@ import { supabase, getBundleWithAll, markBundleProcessing, markBundleComplete } 
 
 // ── Gemini setup ─────────────────────────────────────────────────────────────
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const model = gemini.getGenerativeModel({ model: 'gemini-1.5-flash' });
+const model = gemini.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 // ── AI processing for a single ready bundle ──────────────────────────────────
 async function processBundle(tradeId: string) {
@@ -95,7 +95,7 @@ Please respond ONLY with a valid JSON object (no markdown) matching this exact s
       confidence_level: report.confidence_level,
       confidence_notes: report.confidence_notes,
       report_text: report.report_text,
-      llm_model_used: 'gemini-1.5-flash',
+      llm_model_used: 'gemini-2.5-flash',
       generated_at: new Date().toISOString(),
     });
 

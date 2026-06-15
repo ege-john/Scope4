@@ -98,7 +98,7 @@ async function seed() {
       portfolio_carbon_tco2: parseFloat(portfolio_carbon_tco2.toFixed(2)),
       confidence_level: 'high', confidence_notes: [],
       report_text: `# CBAM Compliance Report — ${demo.trade_id}\n\n## CBAM Reporting Layer\nEmbedded production emissions: **${cbam_embedded_tco2.toFixed(1)} tCO₂**. Estimated CBAM exposure: **€${cbam_exposure_eur.toFixed(0)}** (€50/tCO₂ estimate).\n\n## Carbon Footprint Overview (BI Layer)\nTransport emissions: ${transport_tco2.toFixed(2)} tCO₂. Full portfolio carbon footprint: ${portfolio_carbon_tco2.toFixed(1)} tCO₂. Note: transport emissions are not included in the CBAM liability calculation.`,
-      llm_model_used: 'gemini-1.5-flash',
+      llm_model_used: 'gemini-2.5-flash',
     })
   }
 
