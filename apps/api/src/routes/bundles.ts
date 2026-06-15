@@ -69,9 +69,9 @@ bundlesRouter.post('/', async (c) => {
 });
 
 bundlesRouter.get('/', async (c) => {
-  const { data, error } = await supabase.from('compliance_bundles').select('*');
+  const { data, error } = await supabase.from('compliance_bundles').select('*').order('created_at', { ascending: false });
   if (error) return c.json({ error: error.message }, 500);
-  return c.json({ bundles: data });
+  return c.json(data);
 });
 
 bundlesRouter.get('/:trade_id', async (c) => {
