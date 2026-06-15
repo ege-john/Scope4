@@ -1,5 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { supabase, getBundleWithAll, markBundleProcessing, markBundleComplete, writeAuditEvent } from '@scope4/db';
+import { runAnalytics } from '@scope4/agent';
 
 // ── Gemini setup ─────────────────────────────────────────────────────────────
 const gemini = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
@@ -114,6 +115,15 @@ Please respond ONLY with a valid JSON object matching this exact structure:
     // Mark bundle complete
     await markBundleComplete(bundle.id);
     console.log(`[AI Worker] Bundle ${tradeId} completed successfully.`);
+
+    // Refresh dashboard_insights so the dashboard KPIs update immediately
+    try {
+      await runAnalytics(supabase);
+      console.log(`[AI Worker] Dashboard insights refreshed.`);
+    } catch (analyticsErr: any) {
+      // Non-fatal — dashboard will just show stale data until next run
+      console.warn('[AI Worker] Analytics refresh failed (non-fatal):', analyticsErr.message);
+    }
 
   } catch (err: any) {
     console.error(`[AI Worker] Error processing ${tradeId}:`, err.message);
