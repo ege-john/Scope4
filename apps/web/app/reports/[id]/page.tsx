@@ -235,6 +235,46 @@ export default function ReportPage() {
         </div>
       )}
 
+      {/* Sustainability impact context */}
+      <div className="card" style={{ borderLeft: '3px solid var(--accent-green)', borderRadius: '0 var(--radius-lg) var(--radius-lg) 0' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
+          <span style={{ fontSize: 28, flexShrink: 0 }}>🌍</span>
+          <div>
+            <div className="text-sm font-semibold" style={{ color: 'var(--accent-green)', marginBottom: 6 }}>
+              Why this compliance record matters
+            </div>
+            <p className="text-sm text-secondary" style={{ lineHeight: 1.7, marginBottom: 10 }}>
+              CBAM (EU Regulation 2023/956) ensures that carbon-intensive goods imported into the EU
+              carry a fair carbon price — preventing carbon leakage and levelling the playing field for
+              low-emission European producers. Every verified attestation on this report is an immutable,
+              tamper-resistant record that protects both the importer and the planet.
+            </p>
+            <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+              {report.total_embedded_tco2 > 0 && (
+                <div>
+                  <div className="text-xs text-muted">Equivalent to</div>
+                  <div className="text-sm font-semibold">
+                    ~{Math.round(report.total_embedded_tco2 * 2).toLocaleString()} transatlantic flights
+                  </div>
+                </div>
+              )}
+              {report.total_embedded_tco2 > 0 && (
+                <div>
+                  <div className="text-xs text-muted">Now priced at</div>
+                  <div className="text-sm font-semibold" style={{ color: 'var(--accent-amber)' }}>
+                    ~€{(report.cbam_certificates_required * report.eu_carbon_price_eur_per_t).toLocaleString(undefined, { maximumFractionDigits: 0 })} CBAM obligation
+                  </div>
+                </div>
+              )}
+              <div>
+                <div className="text-xs text-muted">Verified by</div>
+                <div className="text-sm font-semibold">3 independent parties · Solana blockchain</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Audit trail — Member B's table + Member C's per-attestation Solana links */}
       <div className="card" style={{ padding: 0 }}>
         <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border-subtle)' }}>

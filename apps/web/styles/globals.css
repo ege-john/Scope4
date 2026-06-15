@@ -249,10 +249,13 @@ body {
   font-family: var(--s4-font-sans);
 }
 
-.form-input:focus,
-.form-select:focus {
+.form-input:focus {
   border-color: var(--accent-green);
   box-shadow: 0 0 0 3px var(--accent-green-dim);
+}
+
+.form-select:focus {
+  border-color: var(--accent-green);
 }
 
 .form-select option { background: var(--bg-elevated); }

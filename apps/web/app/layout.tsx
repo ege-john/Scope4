@@ -18,6 +18,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className={styles.mainArea}>
             <RoleHeader />
             <main className={styles.pageContent}>{children}</main>
+            <footer className={styles.footer}>
+              <span className={styles.footerLeaf}>🌍</span>
+              <span>
+                Scope4 makes carbon compliance <strong>transparent, auditable, and automated</strong> —
+                helping global trade move toward a lower-carbon future.
+              </span>
+              <span className={styles.footerDivider}>·</span>
+              <span className={styles.footerTag}>Tech for Good · Climate Accountability · Agentic AI</span>
+            </footer>
           </div>
         </div>
       </body>

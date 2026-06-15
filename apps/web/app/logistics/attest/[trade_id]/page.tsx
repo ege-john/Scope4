@@ -67,7 +67,7 @@ export default function LogisticsAttestPage() {
 
   if (result) {
     return (
-      <div style={{ maxWidth: 560 }}>
+      <div style={{ maxWidth: 560, margin: '0 auto' }}>
         <div className="card" style={{ textAlign: 'center', padding: 48 }}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>✓</div>
           <h2 className="text-xl font-bold text-green" style={{ marginBottom: 8 }}>
