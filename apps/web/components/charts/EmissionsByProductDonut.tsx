@@ -33,8 +33,9 @@ export default function EmissionsByProductDonut({ data }: Props) {
             ))}
           </Pie>
           <Tooltip
-            contentStyle={{ background: '#0f1723', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8 }}
+            contentStyle={{ background: '#0f1723', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, color: '#f0f4ff' }}
             labelStyle={{ color: '#f0f4ff' }}
+            itemStyle={{ color: '#f0f4ff' }}
             formatter={(val: number, name: string, props: any) => [`${val.toFixed(1)} tCO₂ (€${props.payload.eur})`, 'Emissions']}
           />
           <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: 12, color: '#8b9cb8' }} />

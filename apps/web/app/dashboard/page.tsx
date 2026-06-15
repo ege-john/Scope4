@@ -1,7 +1,5 @@
 'use client'
-import useSWR from 'swr'
-import { apiGet } from '@/lib/api'
-import type { DashboardSummaryResponse, BundleStatus } from '@scope4/types'
+import type { BundleStatus, DashboardInsight } from '@scope4/types'
 import EmissionsByCountryBar from '@/components/charts/EmissionsByCountryBar'
 import EmissionsByProductDonut from '@/components/charts/EmissionsByProductDonut'
 import MonthlyTrendArea from '@/components/charts/MonthlyTrendArea'
@@ -12,6 +10,49 @@ const STATUS_ORDER: BundleStatus[] = ['awaiting_parties', 'ready', 'processing',
 const STATUS_LABELS: Record<BundleStatus, string> = {
   awaiting_parties: 'Awaiting', ready: 'Ready', processing: 'Processing',
   complete: 'Complete', failed: 'Failed'
+}
+
+const DEMO_INSIGHT: DashboardInsight = {
+  id: 'demo-insight-1',
+  computed_at: new Date().toISOString(),
+  period_start: '2026-01-01',
+  period_end: '2026-06-14',
+  total_tco2: 4723.5,
+  total_cbam_eur: 236175,
+  top_country: 'TR',
+  top_product: 'steel',
+  top_supplier: 'Karabük Demir Çelik A.Ş.',
+  insight_text: 'Turkish steel imports account for **71% of your total CBAM exposure** this quarter. Consider engaging directly with Karabük Demir Çelik to obtain direct measurement methodology data — this could reduce your declared intensity by up to 18% compared to default values. Two bundles are currently awaiting party attestations and may delay your Q2 reporting deadline.',
+  by_country: {
+    'Turkey': { tco2: 3354.7, eur: 167735 },
+    'China':  { tco2: 1368.8, eur: 68440 },
+  },
+  by_product: {
+    'Steel':      { tco2: 3890.2, eur: 194510 },
+    'Cement':     { tco2: 512.6,  eur: 25630 },
+    'Aluminium':  { tco2: 320.7,  eur: 16035 },
+  },
+  by_supplier: {
+    'Karabük Demir Çelik A.Ş.': { tco2: 2834.1, eur: 141705 },
+    'Shanghai Steel Co.':        { tco2: 1368.8, eur: 68440 },
+    'Ankara Cement Works':       { tco2: 520.6,  eur: 26030 },
+  },
+  monthly_series: [
+    { month: '2026-01', tco2: 612.3, eur: 30615 },
+    { month: '2026-02', tco2: 784.1, eur: 39205 },
+    { month: '2026-03', tco2: 956.8, eur: 47840 },
+    { month: '2026-04', tco2: 823.5, eur: 41175 },
+    { month: '2026-05', tco2: 892.4, eur: 44620 },
+    { month: '2026-06', tco2: 654.4, eur: 32720 },
+  ],
+}
+
+const DEMO_COUNTS: Record<BundleStatus, number> = {
+  awaiting_parties: 6,
+  ready: 2,
+  processing: 0,
+  complete: 5,
+  failed: 0,
 }
 
 function BigNumber({ label, value, unit, color }: { label: string; value: string; unit?: string; color?: string }) {
@@ -27,20 +68,8 @@ function BigNumber({ label, value, unit, color }: { label: string; value: string
 }
 
 export default function DashboardPage() {
-  const { data, isLoading } = useSWR<DashboardSummaryResponse>(
-    '/api/dashboard/summary',
-    (url: string) => apiGet(url),
-    { refreshInterval: 10000 }
-  )
-
-  if (isLoading || !data) {
-    return <div className="grid-4" style={{ gap: 16 }}>
-      {[...Array(4)].map((_, i) => <div key={i} className="skeleton" style={{ height: 120, borderRadius: 20 }} />)}
-    </div>
-  }
-
-  const insight = data.latest_insight
-  const counts = data.bundle_counts
+  const insight = DEMO_INSIGHT
+  const counts = DEMO_COUNTS
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -55,8 +84,8 @@ export default function DashboardPage() {
           ― CBAM Reporting Layer — Production-embedded emissions only (EU Reg 2023/956)
         </div>
         <div className="grid-4">
-          <BigNumber label="CBAM-liable Embedded tCO₂" value={insight ? insight.total_tco2.toFixed(0) : '—'} unit="tCO₂" color="var(--accent-green)" />
-          <BigNumber label="Estimated CBAM Exposure ★" value={insight ? `€${(insight.total_cbam_eur / 1000).toFixed(0)}k` : '—'} color="var(--accent-amber)" />
+          <BigNumber label="CBAM-liable Embedded tCO₂" value={insight.total_tco2.toFixed(0)} unit="tCO₂" color="var(--accent-green)" />
+          <BigNumber label="Estimated CBAM Exposure ★" value={`€${(insight.total_cbam_eur / 1000).toFixed(0)}k`} color="var(--accent-amber)" />
           <BigNumber label="Complete Bundles" value={String(counts.complete)} color="var(--accent-green)" />
           <BigNumber label="Pending" value={String(counts.awaiting_parties + counts.ready + counts.processing)} color="var(--accent-blue)" />
         </div>
@@ -79,15 +108,15 @@ export default function DashboardPage() {
 
       {/* Charts row */}
       <div className="grid-2">
-        {insight && <EmissionsByCountryBar data={insight.by_country} />}
-        {insight && <EmissionsByProductDonut data={insight.by_product} />}
+        <EmissionsByCountryBar data={insight.by_country} />
+        <EmissionsByProductDonut data={insight.by_product} />
       </div>
 
       {/* Monthly trend */}
-      {insight && <MonthlyTrendArea data={insight.monthly_series} />}
+      <MonthlyTrendArea data={insight.monthly_series} />
 
       {/* AI Insight card */}
-      {insight && <AIInsightCard text={insight.insight_text} topCountry={insight.top_country} topProduct={insight.top_product} />}
+      <AIInsightCard text={insight.insight_text} topCountry={insight.top_country} topProduct={insight.top_product} />
     </div>
   )
 }
