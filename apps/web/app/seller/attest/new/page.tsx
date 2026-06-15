@@ -46,7 +46,7 @@ export default function SellerAttestationForm() {
     setLoading(true)
     try {
       const data = await apiPost<{ solana_tx: string; trade_id: string }>(
-        '/api/seller/attest',
+        '/api/attestations/seller',
         { ...form, doc_bundle_hash: hash || 'NO_DOC_HASH' },
       )
       setResult(data)

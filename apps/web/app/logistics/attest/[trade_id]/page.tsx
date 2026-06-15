@@ -44,7 +44,7 @@ export default function LogisticsAttestPage() {
     e.preventDefault()
     setSubmitting(true)
     try {
-      const data = await apiPost<{ solana_tx: string }>('/api/logistics/attest', {
+      const data = await apiPost<{ solana_tx: string }>('/api/attestations/logistics', {
         trade_id,
         ...form,
       })

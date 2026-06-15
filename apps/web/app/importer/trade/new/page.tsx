@@ -55,7 +55,7 @@ export default function ImporterTradeForm() {
     setLoading(true)
     try {
       const data = await apiPost<{ solana_tx: string; trade_id: string }>(
-        '/api/importer/trade',
+        '/api/attestations/importer',
         { ...form, doc_bundle_hash: hash || 'NO_DOC_HASH' },
       )
       setResult(data)

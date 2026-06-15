@@ -37,19 +37,27 @@ async function processDocument(file: File | string | undefined, tradeId: string,
 // ── SELLER ATTESTATION ───────────────────────────────────────────────────
 attestationsRouter.post('/seller', async (c) => {
   try {
-    const body = await c.req.parseBody();
-    const tradeId = body.tradeId as string;
-    const facilityId = body.facilityId as string;
-    const productType = parseInt(body.productType as string, 10);
-    const emissionsIntensity = parseInt(body.emissionsIntensity as string, 10);
-    const methodology = parseInt(body.methodology as string, 10);
-    const file = body.document as File;
+    const body = await c.req.json();
+    const tradeId = body.trade_id as string;
+    const sellerName = (body.seller_name as string) || 'Demo Seller A';
+    const facilityId = (body.facility_id as string) || 'UNKNOWN';
+    const productType = (body.product_type as string) || 'steel';
+    const emissionsIntensity = parseFloat(body.emissions_intensity_tco2_per_t as string);
+    const methodology = (body.methodology as string) || 'direct_measure';
+    const docHash = (body.doc_bundle_hash as string) || 'NO_DOC_HASH';
 
+    if (!tradeId) return c.json({ error: 'trade_id is required' }, 400);
     if (!sellerKeypair) return c.json({ error: 'Seller keypair missing' }, 500);
 
-    const { hashArray, hashHex, publicUrl } = await processDocument(file, tradeId, 'seller');
+    // Map product type string to on-chain enum index
+    const productTypeMap: Record<string, number> = { steel: 1, cement: 2, aluminium: 3, fertilisers: 4, electricity: 5 };
+    const productTypeIndex = productTypeMap[productType] ?? 1;
+    const methodologyMap: Record<string, number> = { direct_measure: 1, default_value: 2, national_grid: 3 };
+    const methodologyIndex = methodologyMap[methodology] ?? 1;
+    const emissionsScaled = Math.round(emissionsIntensity * 100);
 
-    const tradeIdBuffer = Buffer.from(tradeId, 'hex');
+    const hashArray = Array.from(Buffer.from(docHash.padEnd(32, '0').slice(0, 32)));
+    const tradeIdBuffer = Buffer.from(tradeId.replace(/-/g, '').slice(0, 32).padEnd(32, '0'));
     const tradeIdArray = Array.from(tradeIdBuffer);
 
     const [bundlePda] = PublicKey.findProgramAddressSync([Buffer.from('bundle'), tradeIdBuffer], programId);
@@ -59,9 +67,9 @@ attestationsRouter.post('/seller', async (c) => {
       .submitSellerAttestation(
         tradeIdArray,
         facilityId,
-        productType,
-        new anchor.BN(emissionsIntensity),
-        methodology,
+        productTypeIndex,
+        new anchor.BN(emissionsScaled),
+        methodologyIndex,
         hashArray
       )
       .accounts({
@@ -76,13 +84,13 @@ attestationsRouter.post('/seller', async (c) => {
     // Update DB
     const { data: insertedSeller, error: dbErr } = await supabase.from('seller_attestations').insert({
       trade_id: tradeId,
-      seller_name: 'Demo Seller A',
+      seller_name: sellerName,
       seller_wallet: sellerKeypair.publicKey.toBase58(),
       facility_id: facilityId,
-      product_type: productType === 1 ? 'steel' : 'other',
-      emissions_intensity_tco2_per_t: emissionsIntensity / 100, // assuming scale
-      methodology: 'direct_measure',
-      doc_bundle_hash: hashHex,
+      product_type: productType,
+      emissions_intensity_tco2_per_t: emissionsIntensity,
+      methodology: methodology,
+      doc_bundle_hash: docHash,
       solana_tx: tx
     }).select().single();
 
@@ -98,31 +106,43 @@ attestationsRouter.post('/seller', async (c) => {
       actor_type: 'seller',
       actor_identity: sellerKeypair.publicKey.toBase58(),
       solana_tx: tx,
-      payload: { facilityId, hashHex }
+      payload: { facilityId, docHash }
     });
 
-    return c.json({ success: true, tx, docUrl: publicUrl });
+    return c.json({ success: true, solana_tx: tx, trade_id: tradeId });
   } catch (err: any) {
     console.error(err);
     return c.json({ error: err.message }, 500);
   }
 });
 
+
 // ── IMPORTER TRADE RECORD ────────────────────────────────────────────────
 attestationsRouter.post('/importer', async (c) => {
   try {
-    const body = await c.req.parseBody();
-    const tradeId = body.tradeId as string;
-    const quantityKg = parseInt(body.quantityKg as string, 10);
-    const originCountry = parseInt(body.originCountry as string, 10);
-    const destinationCountry = parseInt(body.destinationCountry as string, 10);
-    const file = body.document as File;
+    const body = await c.req.json();
+    const importerName = (body.importer_name as string) || 'Demo Importer B';
+    const sellerRef = (body.seller_ref as string) || 'Unknown Seller';
+    const productType = (body.product_type as string) || 'steel';
+    const quantityKg = parseInt(body.quantity_kg as string, 10);
+    const originCountry = (body.origin_country as string) || 'TR';
+    const destinationCountry = (body.destination_country as string) || 'IT';
+    const invoiceRef = (body.invoice_ref as string) || `INV-${Date.now()}`;
+    const purchaseDate = (body.purchase_date as string) || new Date().toISOString().split('T')[0];
+    const docHash = (body.doc_bundle_hash as string) || 'NO_DOC_HASH';
 
     if (!importerKeypair) return c.json({ error: 'Importer keypair missing' }, 500);
 
-    const { hashArray, hashHex, publicUrl } = await processDocument(file, tradeId, 'importer');
+    const originMap: Record<string, number> = { TR: 1, CN: 2 };
+    const destMap: Record<string, number> = { IT: 1, DE: 2, FR: 3, ES: 4, NL: 5 };
+    const originIndex = originMap[originCountry] ?? 1;
+    const destIndex = destMap[destinationCountry] ?? 1;
 
-    const tradeIdBuffer = Buffer.from(tradeId, 'hex');
+    const hashArray = Array.from(Buffer.from(docHash.padEnd(32, '0').slice(0, 32)));
+
+    // Generate a fresh trade_id for this bundle
+    const tradeId = `TRD-${Date.now()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+    const tradeIdBuffer = Buffer.from(tradeId.replace(/-/g, '').slice(0, 32).padEnd(32, '0'));
     const tradeIdArray = Array.from(tradeIdBuffer);
 
     const [bundlePda] = PublicKey.findProgramAddressSync([Buffer.from('bundle'), tradeIdBuffer], programId);
@@ -132,8 +152,8 @@ attestationsRouter.post('/importer', async (c) => {
       .submitTradeRecord(
         tradeIdArray,
         new anchor.BN(quantityKg),
-        originCountry,
-        destinationCountry,
+        originIndex,
+        destIndex,
         hashArray
       )
       .accounts({
@@ -145,19 +165,26 @@ attestationsRouter.post('/importer', async (c) => {
       .signers([importerKeypair])
       .rpc();
 
-    // Update DB
+    // Create compliance bundle first
+    await supabase.from('compliance_bundles').insert({
+      trade_id: tradeId,
+      bundle_status: 'awaiting_parties',
+      created_at: new Date().toISOString(),
+    });
+
+    // Update DB with trade record
     const { data: insertedTrade, error: dbErr } = await supabase.from('trade_records').insert({
       trade_id: tradeId,
-      importer_name: 'Demo Importer B',
+      importer_name: importerName,
       importer_wallet: importerKeypair.publicKey.toBase58(),
-      seller_ref: 'Demo Seller A',
-      product_type: 'steel', // simplify for demo
+      seller_ref: sellerRef,
+      product_type: productType,
       quantity_kg: quantityKg,
-      origin_country: originCountry === 1 ? 'TR' : 'CN',
-      destination_country: destinationCountry === 2 ? 'IT' : 'DE',
-      invoice_ref: `INV-${tradeId.substring(0, 8)}`,
-      purchase_date: new Date().toISOString().split('T')[0],
-      doc_bundle_hash: hashHex,
+      origin_country: originCountry,
+      destination_country: destinationCountry,
+      invoice_ref: invoiceRef,
+      purchase_date: purchaseDate,
+      doc_bundle_hash: docHash,
       solana_tx: tx
     }).select().single();
 
@@ -173,10 +200,10 @@ attestationsRouter.post('/importer', async (c) => {
       actor_type: 'importer',
       actor_identity: importerKeypair.publicKey.toBase58(),
       solana_tx: tx,
-      payload: { quantityKg, hashHex }
+      payload: { quantityKg, docHash }
     });
 
-    return c.json({ success: true, tx, docUrl: publicUrl });
+    return c.json({ success: true, solana_tx: tx, trade_id: tradeId });
   } catch (err: any) {
     console.error(err);
     return c.json({ error: err.message }, 500);
@@ -186,17 +213,22 @@ attestationsRouter.post('/importer', async (c) => {
 // ── LOGISTICS ATTESTATION ────────────────────────────────────────────────
 attestationsRouter.post('/logistics', async (c) => {
   try {
-    const body = await c.req.parseBody();
-    const tradeId = body.tradeId as string;
-    const quantityConfirmedKg = parseInt(body.quantityConfirmedKg as string, 10);
-    const originConfirmed = body.originConfirmed === 'true';
-    const routeConfirmed = body.routeConfirmed === 'true';
-    const dispatchDate = parseInt(body.dispatchDate as string, 10);
+    const body = await c.req.json();
+    const tradeId = body.trade_id as string;
+    const logisticsName = (body.logistics_name as string) || 'Demo Logistics C';
+    const shipmentRef = (body.shipment_ref as string) || `SHP-${tradeId?.substring(0, 8)}`;
+    const quantityConfirmedKg = parseInt(body.quantity_confirmed_kg as string, 10);
+    const originConfirmed = body.origin_confirmed === true || body.origin_confirmed === 'true';
+    const routeConfirmed = body.route_confirmed === true || body.route_confirmed === 'true';
+    const dispatchDate = body.dispatch_date as string;
 
+    if (!tradeId) return c.json({ error: 'trade_id is required' }, 400);
     if (!logisticsKeypair) return c.json({ error: 'Logistics keypair missing' }, 500);
 
-    const tradeIdBuffer = Buffer.from(tradeId, 'hex');
+    const dispatchTimestamp = Math.floor(new Date(dispatchDate).getTime() / 1000);
+    const tradeIdBuffer = Buffer.from(tradeId.replace(/-/g, '').slice(0, 32).padEnd(32, '0'));
     const tradeIdArray = Array.from(tradeIdBuffer);
+    const hashArray = Array.from(Buffer.alloc(32, 0));
 
     const [bundlePda] = PublicKey.findProgramAddressSync([Buffer.from('bundle'), tradeIdBuffer], programId);
     const [logisticsPda] = PublicKey.findProgramAddressSync([Buffer.from('logistics'), tradeIdBuffer], programId);
@@ -207,7 +239,7 @@ attestationsRouter.post('/logistics', async (c) => {
         new anchor.BN(quantityConfirmedKg),
         originConfirmed,
         routeConfirmed,
-        new anchor.BN(dispatchDate)
+        new anchor.BN(dispatchTimestamp)
       )
       .accounts({
         logisticsAttestation: logisticsPda,
@@ -221,22 +253,22 @@ attestationsRouter.post('/logistics', async (c) => {
     // Update DB
     const { data: insertedLogistics, error: dbErr } = await supabase.from('logistics_attestations').insert({
       trade_id: tradeId,
-      logistics_name: 'Demo Logistics C',
+      logistics_name: logisticsName,
       logistics_wallet: logisticsKeypair.publicKey.toBase58(),
-      shipment_ref: `SHP-${tradeId.substring(0, 8)}`,
+      shipment_ref: shipmentRef,
       quantity_confirmed_kg: quantityConfirmedKg,
       origin_confirmed: originConfirmed,
       route_confirmed: routeConfirmed,
-      dispatch_date: new Date(dispatchDate * 1000).toISOString().split('T')[0],
+      dispatch_date: dispatchDate,
       solana_tx: tx
     }).select().single();
 
     if (dbErr) throw new Error(`DB Insert Error: ${dbErr.message}`);
 
     if (insertedLogistics) {
-      await supabase.from('compliance_bundles').update({ 
+      await supabase.from('compliance_bundles').update({
         logistics_attestation_id: insertedLogistics.id,
-        bundle_status: 'ready', // Assume ready when all 3 are in (logistics is typically last)
+        bundle_status: 'ready',
         ready_at: new Date().toISOString()
       }).eq('trade_id', tradeId);
     }
@@ -249,7 +281,7 @@ attestationsRouter.post('/logistics', async (c) => {
       solana_tx: tx,
     });
 
-    return c.json({ success: true, tx });
+    return c.json({ success: true, solana_tx: tx });
   } catch (err: any) {
     console.error(err);
     return c.json({ error: err.message }, 500);
