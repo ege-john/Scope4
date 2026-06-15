@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter, usePathname } from 'next/navigation'
+import Image from 'next/image'
 import styles from './RoleHeader.module.css'
 
 const ROLES = [
@@ -17,17 +18,7 @@ export default function RoleHeader() {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <svg className={styles.logoMark} width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-          <circle cx="14" cy="5"  r="3" fill="currentColor"/>
-          <circle cx="5"  cy="22" r="3" fill="currentColor"/>
-          <circle cx="23" cy="22" r="3" fill="currentColor"/>
-          <line x1="14" y1="5"  x2="5"  y2="22" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.5"/>
-          <line x1="14" y1="5"  x2="23" y2="22" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.5"/>
-          <line x1="5"  y1="22" x2="23" y2="22" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.5"/>
-        </svg>
-        <span className={styles.logoText}>
-          Scope<span className={styles.logoAccent}>4</span>
-        </span>
+        <Image src="/SC-3.png" alt="Scope4" width={120} height={36} style={{ objectFit: 'contain' }} priority />
       </div>
 
       <nav className={styles.roleNav}>
