@@ -86,19 +86,14 @@ Please respond ONLY with a valid JSON object matching this exact structure:
       validation_flags: report.validation_flags,
       intensity_source: report.intensity_source,
       embedded_tco2: report.embedded_tco2,
-      total_embedded_tco2: report.embedded_tco2,           // alias required by schema
       cbam_exposure_eur: report.cbam_exposure_eur,
-      cbam_certificates_required: report.embedded_tco2,   // certificates = tCO2 amount
-      eu_carbon_price_eur_per_t: 65,                       // EU ETS price used in prompt
       transport_tco2: report.transport_tco2,
-      total_transport_tco2: report.transport_tco2,         // alias required by schema
       total_tco2: report.total_tco2,
       confidence_level: report.confidence_level,
       confidence_notes: report.confidence_notes,
       report_text: report.report_text,
       llm_model_used: 'gemini-2.5-flash',
       generated_at: new Date().toISOString(),
-      created_at: new Date().toISOString(),
     });
 
     if (insertErr) {
