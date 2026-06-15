@@ -50,3 +50,4 @@ ehthumbs.db
 Thumbs.db
 test-ledger/
 
+*.tsbuildinfo
