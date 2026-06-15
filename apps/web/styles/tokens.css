@@ -1,0 +1,28 @@
+/* ── Scope4 Brand Tokens ───────────────────────────────────────────────────── */
+/* Single source of truth. All other CSS files consume var(--s4-*).            */
+/* Logo: neutral gray wordmark, green "O" + "4". Green is SPARING.             */
+
+:root {
+  /* Brand green family */
+  --s4-green:        #4CAF50;
+  --s4-green-hover:  #43A047;
+  --s4-green-dark:   #2E7D32;
+  --s4-green-dim:    rgba(76, 175, 80, 0.15);
+  --s4-green-subtle: rgba(76, 175, 80, 0.06);
+  --s4-green-border: rgba(76, 175, 80, 0.35);
+  --s4-green-glow:   rgba(76, 175, 80, 0.20);
+
+  /* Neutral / gray */
+  --s4-gray:   #4A4A4A;
+  --s4-text-2: #6B7280;
+
+  /* Radii (brand spec) */
+  --s4-radius-sm: 4px;
+  --s4-radius-md: 8px;
+  --s4-radius-lg: 12px;
+  --s4-radius-xl: 20px;
+
+  /* Typography */
+  --s4-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --s4-font-mono: 'Roboto Mono', 'Courier New', monospace;
+}

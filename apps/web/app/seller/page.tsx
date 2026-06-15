@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiGet } from '@/lib/api'
+import { truncateId } from '@/lib/format'
 import type { ComplianceBundle } from '@scope4/types'
 import Badge from '@/components/ui/Badge'
 
@@ -68,7 +69,7 @@ export default function SellerPage() {
                   style={{ cursor: 'pointer' }}
                   onClick={() => router.push(`/bundles/${b.trade_id}`)}
                 >
-                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{b.trade_id}</td>
+                  <td><span className="mono-id" title={b.trade_id}>{truncateId(b.trade_id)}</span></td>
                   <td><Badge status={b.bundle_status} /></td>
                   <td>{b.seller_attested_at ? new Date(b.seller_attested_at).toLocaleString() : '—'}</td>
                   <td style={{ color: 'var(--accent-blue)', fontSize: 12 }}>View →</td>

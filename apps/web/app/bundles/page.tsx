@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { apiGet } from '@/lib/api'
+import { truncateId } from '@/lib/format'
 import type { ComplianceBundle, BundleStatus } from '@scope4/types'
 import Badge from '@/components/ui/Badge'
 
@@ -93,7 +94,7 @@ export default function BundlesPage() {
                   style={{ cursor: 'pointer' }}
                   onClick={() => router.push(`/bundles/${b.trade_id}`)}
                 >
-                  <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{b.trade_id}</td>
+                  <td><span className="mono-id" title={b.trade_id}>{truncateId(b.trade_id)}</span></td>
                   <td><Badge status={b.bundle_status} /></td>
                   <td style={{ fontSize: 12 }}>{b.seller_attested_at ? '✓' : '—'}</td>
                   <td style={{ fontSize: 12 }}>{b.importer_attested_at ? '✓' : '—'}</td>

@@ -101,7 +101,7 @@
   border-left: 3px solid var(--accent-green);
   padding-left: 16px;
   color: var(--text-secondary);
-  background: rgba(0, 217, 146, 0.05);
+  background: var(--s4-green-subtle);
   padding: 12px 16px;
   border-radius: 0 8px 8px 0;
   margin-bottom: 16px;
