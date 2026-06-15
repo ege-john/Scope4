@@ -32,3 +32,4 @@ serve({
 
 // Start AI background worker (polls Supabase for ready bundles every 15s)
 startAIWorker();
+// trigger deploy
