@@ -4,5 +4,5 @@ export default defineConfig({
   entry: ['src/index.ts'],
   format: ['cjs'],
   clean: true,
-  noExternal: ['@scope4/db', '@scope4/types'],
+  noExternal: ['@scope4/db', '@scope4/types', '@scope4/agent'],
 });
