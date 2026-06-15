@@ -29,6 +29,14 @@ export async function getBundleWithAll(trade_id: string) {
       supabase.from('compliance_reports').select('*').eq('bundle_id', bundle.id).maybeSingle(),
     ])
 
+  if (report) {
+    report.total_embedded_tco2 = report.embedded_tco2;
+    report.cbam_certificates_required = report.embedded_tco2;
+    report.eu_carbon_price_eur_per_t = 65;
+    report.total_transport_tco2 = report.transport_tco2;
+    report.created_at = report.generated_at;
+  }
+
   return { bundle, seller, trade, logistics, report }
 }
 
