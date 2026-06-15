@@ -1,17 +1,21 @@
-/* ── Google Fonts ─────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* ── Brand tokens (single source of truth) ────────────────────────────────── */
+@import './tokens.css';
 
-/* ── Colour tokens ────────────────────────────────────────────────────────── */
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap');
+
+/* ── Colour tokens (dark theme) ───────────────────────────────────────────── */
 :root {
   /* Backgrounds */
   --bg-base:          #080d14;
   --bg-surface:       #0f1723;
   --bg-elevated:      #162032;
   --bg-glass:         rgba(22, 32, 50, 0.6);
+  --bg-card-alt:      rgba(22, 32, 50, 0.4);
 
-  /* Accents */
-  --accent-green:     #00d992;
-  --accent-green-dim: rgba(0, 217, 146, 0.15);
+  /* Accents — green sourced from brand tokens */
+  --accent-green:     var(--s4-green);
+  --accent-green-dim: var(--s4-green-dim);
   --accent-amber:     #f5a623;
   --accent-amber-dim: rgba(245, 166, 35, 0.15);
   --accent-red:       #ff4757;
@@ -28,15 +32,15 @@
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-glass:  rgba(255, 255, 255, 0.10);
 
-  /* Spacing */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  /* Radii — sourced from brand tokens */
+  --radius-sm: var(--s4-radius-sm);
+  --radius-md: var(--s4-radius-md);
+  --radius-lg: var(--s4-radius-lg);
+  --radius-xl: var(--s4-radius-xl);
 
   /* Shadows */
   --shadow-card:       0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-glow-green: 0 0 24px rgba(0, 217, 146, 0.2);
+  --shadow-glow-green: 0 0 20px var(--s4-green-glow);
 }
 
 /* ── Reset & base ─────────────────────────────────────────────────────────── */
@@ -49,12 +53,53 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--s4-font-sans);
   font-size: 14px;
   line-height: 1.6;
   background-color: var(--bg-base);
   color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
+}
+
+/* ── Focus visible ────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--s4-green);
+  outline-offset: 2px;
+}
+
+/* ── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: var(--bg-base); }
+::-webkit-scrollbar-thumb  { background: var(--s4-green-dark); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--s4-green); }
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Animations ───────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.3s ease forwards;
 }
 
 /* ── Typography scale ─────────────────────────────────────────────────────── */
@@ -67,9 +112,9 @@ body {
 .text-3xl   { font-size: 30px; }
 .text-4xl   { font-size: 38px; }
 
-.font-medium   { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold     { font-weight: 700; }
+.font-medium    { font-weight: 500; }
+.font-semibold  { font-weight: 600; }
+.font-bold      { font-weight: 700; }
 .font-extrabold { font-weight: 800; }
 
 .text-primary   { color: var(--text-primary); }
@@ -80,15 +125,24 @@ body {
 .text-red       { color: var(--accent-red); }
 .text-blue      { color: var(--accent-blue); }
 
+/* ── Monospace ID class ───────────────────────────────────────────────────── */
+/* Use for trade IDs, hashes, wallet addresses, Solana TXs                    */
+.mono-id {
+  font-family: var(--s4-font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
 /* ── Glass card ───────────────────────────────────────────────────────────── */
 .card {
-  background: var(--bg-glass);
-  border: 1px solid var(--border-glass);
+  background: linear-gradient(145deg, rgba(22, 32, 50, 0.75), rgba(12, 18, 30, 0.65));
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 24px;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255,255,255,0.04) inset;
 }
 
 .card-sm { padding: 16px; border-radius: var(--radius-md); }
@@ -109,17 +163,17 @@ body {
   border: none;
   text-decoration: none;
   white-space: nowrap;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--s4-font-sans);
 }
 
 .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .btn-primary {
   background: var(--accent-green);
-  color: #080d14;
+  color: #fff;
 }
 .btn-primary:hover:not(:disabled) {
-  background: #00f5a8;
+  background: var(--s4-green-hover);
   box-shadow: var(--shadow-glow-green);
   transform: translateY(-1px);
 }
@@ -175,11 +229,10 @@ body {
 .form-group { display: flex; flex-direction: column; gap: 6px; }
 
 .form-label {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-secondary);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0.01em;
 }
 
 .form-input,
@@ -193,7 +246,7 @@ body {
   width: 100%;
   transition: border-color 0.15s ease;
   outline: none;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--s4-font-sans);
 }
 
 .form-input:focus,
@@ -239,11 +292,6 @@ body {
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
-}
-
-@keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
 }
 
 /* ── Layout utils ─────────────────────────────────────────────────────────── */

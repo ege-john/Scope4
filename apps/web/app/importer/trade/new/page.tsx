@@ -95,7 +95,7 @@ export default function ImporterTradeForm() {
   }
 
   return (
-    <div style={{ maxWidth: 640 }}>
+    <div style={{ maxWidth: 640, margin: '0 auto' }}>
       <div style={{ marginBottom: 32 }}>
         <h1 className="text-2xl font-bold">Submit Trade Record</h1>
         <p className="text-secondary" style={{ marginTop: 4 }}>
@@ -218,7 +218,7 @@ export default function ImporterTradeForm() {
           )}
         </div>
 
-        <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
+        <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px 24px', marginTop: 4 }} disabled={loading}>
           {loading ? 'Creating Bundle…' : 'Submit Trade Record'}
         </button>
       </form>

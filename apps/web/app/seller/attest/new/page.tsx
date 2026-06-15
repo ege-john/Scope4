@@ -83,7 +83,7 @@ export default function SellerAttestationForm() {
   }
 
   return (
-    <div style={{ maxWidth: 640 }}>
+    <div style={{ maxWidth: 640, margin: '0 auto' }}>
       <div style={{ marginBottom: 32 }}>
         <h1 className="text-2xl font-bold">Submit Emissions Declaration</h1>
         <p className="text-secondary" style={{ marginTop: 4 }}>
@@ -183,7 +183,7 @@ export default function SellerAttestationForm() {
           )}
         </div>
 
-        <button type="submit" className="btn btn-primary btn-lg" disabled={loading}>
+        <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px 24px', marginTop: 4 }} disabled={loading}>
           {loading ? 'Recording on Solana…' : 'Submit Attestation'}
         </button>
       </form>

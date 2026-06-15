@@ -3,11 +3,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  height: 64px;
-  background: rgba(8, 13, 20, 0.8);
+  height: 60px;
+  background: rgba(8, 13, 20, 0.85);
   border-bottom: 1px solid var(--border-subtle);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -16,55 +16,54 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
 .logoMark {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--accent-green);
-  color: #080d14;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 13px;
+  color: var(--accent-green);
+  display: block;
+  flex-shrink: 0;
 }
 
 .logoText {
   font-weight: 700;
-  font-size: 16px;
+  font-size: 15px;
+  letter-spacing: -0.01em;
   color: var(--text-primary);
+}
+
+.logoAccent {
+  color: var(--accent-green);
 }
 
 .roleNav {
   display: flex;
-  gap: 4px;
+  gap: 2px;
 }
 
 .roleBtn {
-  padding: 7px 16px;
+  padding: 6px 14px;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: var(--text-secondary);
-  border: 1px solid transparent;
+  color: var(--text-muted);
+  border: none;
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
-  font-family: 'Inter', sans-serif;
-  transition: all 0.15s ease;
+  font-family: var(--s4-font-sans);
+  transition: color 0.15s ease, background 0.15s ease;
+  letter-spacing: 0.01em;
 }
 
 .roleBtn:hover {
   color: var(--text-primary);
-  border-color: var(--border-glass);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .roleBtn.active {
-  background: var(--accent-green-dim);
+  background: var(--s4-green-dim);
   color: var(--accent-green);
-  border-color: rgba(0, 217, 146, 0.3);
+  font-weight: 600;
 }
 
 .networkBadge {
@@ -72,7 +71,9 @@
   align-items: center;
   gap: 6px;
   font-size: 11px;
+  font-weight: 500;
   color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
 .dot {
@@ -85,5 +86,5 @@
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.4; }
+  50%       { opacity: 0.35; }
 }

@@ -88,7 +88,7 @@ export default function LogisticsAttestPage() {
   }
 
   return (
-    <div style={{ maxWidth: 700 }}>
+    <div style={{ maxWidth: 700, margin: '0 auto' }}>
       <div style={{ marginBottom: 24 }}>
         <h1 className="text-2xl font-bold">Confirm Shipment</h1>
         <p className="text-secondary" style={{ marginTop: 4 }}>
@@ -210,7 +210,7 @@ export default function LogisticsAttestPage() {
           </label>
         </div>
 
-        <button type="submit" className="btn btn-primary btn-lg" disabled={submitting}>
+        <button type="submit" className="btn btn-primary" style={{ width: '100%', padding: '12px 24px', marginTop: 4 }} disabled={submitting}>
           {submitting ? 'Recording on Solana…' : 'Confirm Shipment'}
         </button>
       </form>
