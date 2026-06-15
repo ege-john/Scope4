@@ -18,7 +18,7 @@ export default function RoleHeader() {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <Image src="/SC-3.png" alt="Scope4" width={120} height={36} style={{ objectFit: 'contain' }} priority />
+        <Image src="/SC-33.png" alt="Scope4" width={120} height={36} style={{ objectFit: 'contain' }} priority />
       </div>
 
       <nav className={styles.roleNav}>
