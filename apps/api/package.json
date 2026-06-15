@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@coral-xyz/anchor": "^0.32.1",
+    "@google/generative-ai": "^0.21.0",
     "@hono/node-server": "^2.0.4",
     "@scope4/db": "workspace:*",
     "@scope4/types": "workspace:*",

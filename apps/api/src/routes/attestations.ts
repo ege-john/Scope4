@@ -97,7 +97,10 @@ attestationsRouter.post('/seller', async (c) => {
     if (dbErr) throw new Error(`DB Insert Error: ${dbErr.message}`);
 
     if (insertedSeller) {
-      await supabase.from('compliance_bundles').update({ seller_attestation_id: insertedSeller.id }).eq('trade_id', tradeId);
+      await supabase.from('compliance_bundles').update({
+        seller_attestation_id: insertedSeller.id,
+        seller_attested_at: new Date().toISOString(),
+      }).eq('trade_id', tradeId);
     }
 
     await writeAuditEvent({
@@ -205,7 +208,10 @@ attestationsRouter.post('/importer', async (c) => {
     if (dbErr) throw new Error(`DB Insert Error: ${dbErr.message}`);
 
     if (insertedTrade) {
-      await supabase.from('compliance_bundles').update({ trade_record_id: insertedTrade.id }).eq('trade_id', tradeId);
+      await supabase.from('compliance_bundles').update({
+        trade_record_id: insertedTrade.id,
+        importer_attested_at: new Date().toISOString(),
+      }).eq('trade_id', tradeId);
     }
 
     await writeAuditEvent({
@@ -282,6 +288,7 @@ attestationsRouter.post('/logistics', async (c) => {
     if (insertedLogistics) {
       await supabase.from('compliance_bundles').update({
         logistics_attestation_id: insertedLogistics.id,
+        logistics_attested_at: new Date().toISOString(),
         bundle_status: 'ready',
         ready_at: new Date().toISOString()
       }).eq('trade_id', tradeId);

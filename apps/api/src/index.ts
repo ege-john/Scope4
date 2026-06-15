@@ -6,6 +6,7 @@ import { bundlesRouter } from './routes/bundles';
 import { attestationsRouter } from './routes/attestations';
 import { reportsRouter } from './routes/reports';
 import { dashboardRouter } from './routes/dashboard';
+import { startAIWorker } from './aiWorker';
 
 const app = new Hono();
 
@@ -27,3 +28,6 @@ serve({
   fetch: app.fetch,
   port
 });
+
+// Start AI background worker (polls Supabase for ready bundles every 15s)
+startAIWorker();
