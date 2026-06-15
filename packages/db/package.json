@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "main": "./src/index.ts",
   "dependencies": {
+    "@scope4/types": "workspace:*",
     "@supabase/supabase-js": "^2.43.0",
-    "@scope4/types": "workspace:*"
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1"
   }
 }
