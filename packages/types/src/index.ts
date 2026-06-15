@@ -80,15 +80,23 @@ export interface ComplianceReport {
   validation_passed: boolean
   validation_flags: string[]
   intensity_source: IntensitySource
-  embedded_tco2: number
-  transport_tco2: number
-  total_tco2: number
-  cbam_exposure_eur: number
+  // ── CBAM Reporting Layer ──────────────────────────────────────────────────
+  embedded_tco2: number           // production-embedded tCO₂ (CBAM base)
+  total_embedded_tco2: number     // alias for embedded_tco2 (used in UI)
+  cbam_exposure_eur: number       // embedded_tco2 × carbon price estimate
+  cbam_certificates_required: number // certificates needed (= embedded_tco2)
+  eu_carbon_price_eur_per_t: number  // carbon price used for the estimate
+  // ── BI Layer ─────────────────────────────────────────────────────────────
+  transport_tco2: number          // logistics/shipping emissions (BI only)
+  total_transport_tco2: number    // alias for transport_tco2 (used in UI)
+  total_tco2: number              // embedded + transport (portfolio, BI only)
+  // ── Metadata ─────────────────────────────────────────────────────────────
   confidence_level: ConfidenceLevel
   confidence_notes: string[]
   report_text: string
   llm_model_used: string
   generated_at: string
+  created_at: string
 }
 
 export interface AuditEvent {
@@ -100,6 +108,7 @@ export interface AuditEvent {
   solana_tx: string | null
   payload: Record<string, unknown>
   occurred_at: string
+  created_at: string   // alias for occurred_at (used in frontend pages)
 }
 
 export interface DashboardInsight {
@@ -193,7 +202,8 @@ export interface BundleDetailResponse {
   trade: TradeRecord | null
   logistics: LogisticsAttestation | null
   report: ComplianceReport | null
-  audit_events: AuditEvent[]
+  audit_events: AuditEvent[]   // canonical field name (API response key)
+  audit_trail: AuditEvent[]    // alias used by frontend pages
 }
 
 export interface DashboardSummaryResponse {
