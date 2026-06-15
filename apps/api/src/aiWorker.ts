@@ -47,21 +47,24 @@ LOGISTICS ATTESTATION:
 - Dispatch Date: ${logistics?.dispatch_date ?? 'N/A'}
 
 CBAM CONTEXT:
-- CBAM applies to imports of steel, cement, aluminium, fertilisers, and electricity into the EU.
-- The EU ETS carbon price is approximately €65/tCO₂.
 - Embedded emissions = emissions_intensity × quantity_in_tonnes
-- CBAM certificates required = embedded_emissions (1 certificate = 1 tCO₂)
-- Use the seller's declared emissions intensity for calculation.
+- Transport emissions = estimate based on route (e.g. TR->IT ship ~0.05 tCO2/t).
+- The EU ETS carbon price is approximately 65 EUR/tCO₂.
 
-Please respond ONLY with a valid JSON object (no markdown, no code fences) with exactly these fields:
+Please respond ONLY with a valid JSON object (no markdown) matching this exact schema:
 {
-  "total_embedded_tco2": <number>,
+  "validation_passed": <boolean>,
+  "validation_flags": [<string>],
+  "intensity_source": "seller_direct" | "seller_default" | "system_default",
+  "embedded_tco2": <number>,
+  "cbam_exposure_eur": <number>,
   "cbam_certificates_required": <number>,
   "eu_carbon_price_eur_per_t": <number>,
-  "estimated_cbam_cost_eur": <number>,
-  "compliance_status": "compliant" | "non_compliant" | "requires_review",
-  "risk_flags": [<string>],
-  "summary": "<one paragraph summary>"
+  "transport_tco2": <number>,
+  "total_tco2": <number>,
+  "confidence_level": "high" | "medium" | "low",
+  "confidence_notes": [<string>],
+  "report_text": "<A concise 2-sentence summary>"
 }
 `;
 
@@ -78,14 +81,21 @@ Please respond ONLY with a valid JSON object (no markdown, no code fences) with 
     // Save report to DB
     const { error: insertErr } = await supabase.from('compliance_reports').insert({
       bundle_id: bundle.id,
-      trade_id: tradeId,
-      total_embedded_tco2: report.total_embedded_tco2,
+      validation_passed: report.validation_passed,
+      validation_flags: report.validation_flags,
+      intensity_source: report.intensity_source,
+      embedded_tco2: report.embedded_tco2,
+      total_embedded_tco2: report.embedded_tco2,
+      cbam_exposure_eur: report.cbam_exposure_eur,
       cbam_certificates_required: report.cbam_certificates_required,
       eu_carbon_price_eur_per_t: report.eu_carbon_price_eur_per_t,
-      estimated_cbam_cost_eur: report.estimated_cbam_cost_eur,
-      compliance_status: report.compliance_status,
-      risk_flags: report.risk_flags,
-      summary: report.summary,
+      transport_tco2: report.transport_tco2,
+      total_transport_tco2: report.transport_tco2,
+      total_tco2: report.total_tco2,
+      confidence_level: report.confidence_level,
+      confidence_notes: report.confidence_notes,
+      report_text: report.report_text,
+      llm_model_used: 'gemini-1.5-flash',
       generated_at: new Date().toISOString(),
     });
 
