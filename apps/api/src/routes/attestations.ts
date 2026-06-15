@@ -148,6 +148,20 @@ attestationsRouter.post('/importer', async (c) => {
     const [bundlePda] = PublicKey.findProgramAddressSync([Buffer.from('bundle'), tradeIdBuffer], programId);
     const [tradePda] = PublicKey.findProgramAddressSync([Buffer.from('trade'), tradeIdBuffer], programId);
 
+    // Step 1: Initialize the bundle PDA on-chain (required before any attestation)
+    const initTx = await program.methods
+      .initializeBundle(tradeIdArray)
+      .accounts({
+        bundle: bundlePda,
+        importer: importerKeypair.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId,
+      })
+      .signers([importerKeypair])
+      .rpc();
+
+    console.log(`Bundle initialized: ${initTx}`);
+
+    // Step 2: Submit the trade record referencing the now-initialized bundle
     const tx = await program.methods
       .submitTradeRecord(
         tradeIdArray,
@@ -165,14 +179,14 @@ attestationsRouter.post('/importer', async (c) => {
       .signers([importerKeypair])
       .rpc();
 
-    // Create compliance bundle first
+    // Create compliance bundle row in DB
     await supabase.from('compliance_bundles').insert({
       trade_id: tradeId,
       bundle_status: 'awaiting_parties',
       created_at: new Date().toISOString(),
     });
 
-    // Update DB with trade record
+    // Insert trade record
     const { data: insertedTrade, error: dbErr } = await supabase.from('trade_records').insert({
       trade_id: tradeId,
       importer_name: importerName,
